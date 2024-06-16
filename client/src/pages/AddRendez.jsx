@@ -82,17 +82,18 @@ const AddRendez = () => {
   };
 
   return (
-    <div className="container mt-4 shadow-lg p-4">
+    <div className="container mt-4 shadow-lg p-5 " style={{paddingRight:"20px"}}>
       {currentStep === 1 && (
         <>
           <h1 className="text-2xl font-semibold">Personal Information</h1>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="block text-sm font-medium">Nom:</label>
+              <label className="block text-sm font-medium" htmlFor="NOM">Nom:</label>
               <input
                 type="text"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                 name="NOM"
+                id="NOM"
                 value={formData.NOM}
                 onChange={handleChange}
                 required
