@@ -12,7 +12,6 @@ export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      console.log("From auth", { email, password });
       const response = await fetch("http://localhost:3001/users/login", {
         method: "POST",
         headers: {
@@ -23,15 +22,12 @@ export const login = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Login error response", errorData);
         return rejectWithValue(errorData);
       }
 
       const user = await response.json();
-      console.log("Login success", user);
-      return { user: user.user, token: user.Token }; // Adjust based on actual response structure
+      return { user: user.user, token: user.Token };
     } catch (error) {
-      console.error("Login error", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -42,7 +38,6 @@ export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { getState, rejectWithValue }) => {
     try {
-      
       const token = localStorage.getItem('token');
       
       const response = await fetch("http://localhost:3001/users/token", {
@@ -52,13 +47,11 @@ export const loadUser = createAsyncThunk(
         },
       });
       const data = await response.json();
-      console.log("fetch Token" , data);
       if (token && data) {
         return { user: data.data, token };
       }
       return null;
     } catch (error) {
-      console.error("Load user error", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -82,7 +75,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user; // Update to store the user directly
+        state.user = action.payload.user;
         state.token = action.payload.token;
         localStorage.setItem('token', action.payload.token);
       })
@@ -92,7 +85,7 @@ const authSlice = createSlice({
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         if (action.payload) {
-          state.user = action.payload.user; // Update to store the user directly
+          state.user = action.payload.user;
           state.token = action.payload.token;
         }
       })
