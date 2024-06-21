@@ -6,11 +6,11 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { useStateContext } from '../contexts/ContextProvider';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine } from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+import { useAuth } from '../contexts/user/authContext';
 
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();
-  const { user, token, loading, error } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   const links = [
     {
       title: 'Dashboard',

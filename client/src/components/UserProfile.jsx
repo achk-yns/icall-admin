@@ -1,18 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Popover, List, ListItem, ListItemText, ListItemIcon, Button } from '@mui/material';
+import { Popover, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { DashboardOutlined, LogoutOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { logout } from '../auth/authSlice';
+import { AuthContext } from '../contexts/user/authContext';
 
 const UserProfile = ({ anchorEl, handleClose }) => {
-
-  const dispatch = useDispatch()
-
-  const handleLogout = ()=>{
-      dispatch(logout())
-  }
-
+  const { logout } = useContext(AuthContext);
   return (
     <Popover
       open={Boolean(anchorEl)}
@@ -34,7 +27,7 @@ const UserProfile = ({ anchorEl, handleClose }) => {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button onClick={handleLogout}>
+        <ListItem button onClick={()=>logout()}>
           <ListItemIcon>
             <LogoutOutlined style={{ fontSize: '20px' , color:"red" }} />
           </ListItemIcon>

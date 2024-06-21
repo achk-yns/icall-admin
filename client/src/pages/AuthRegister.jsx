@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+import { Formik } from 'formik';
+ // Adjust the path as needed
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -16,57 +17,15 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-
-// third party
-
-import { Formik } from 'formik';
-
-
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
-
-
-// ============================|| JWT - REGISTER ||============================ //
+import { AuthContext } from '../contexts/user/authContext';
 
 export default function AuthRegister() {
+  const navigate = useNavigate();
+  const { register, loading, error } = useContext(AuthContext);
 
-  
-  
-    
-
-      const navigate = useNavigate()
-    
-      const handleSubmit = async (values) => {
-        try {
-          console.log(values);
-          // Serialize form data
-          const formData = new FormData();
-          for (const key in values) {
-            formData.append(key, values[key]);
-          }
-    
-          const response = await fetch("http://localhost:3001/users/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-              },
-            body: JSON.stringify(values),
-          });
-
-          console.log(response)
-    
-          if (response.ok) {
-            alert("Registration Success")
-            navigate("/");
-          }
-        } catch (err) {
-          console.log("Registration failed", err.message);
-        }
-      };
-    
-
-  const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
@@ -77,21 +36,23 @@ export default function AuthRegister() {
     event.preventDefault();
   };
 
-  
-
-  
-
   return (
     <>
       <Formik
         initialValues={{
-            NOM: "",
-            PRENOM: "",
-            EMAIL: "",
-            PASSWORD: "",
-          }}
-        onSubmit={(values) => {
-          handleSubmit(values);
+          NOM: '',
+          PRENOM: '',
+          EMAIL: '',
+          PASSWORD: '',
+        }}
+        onSubmit={async (values) => {
+          await register(values);
+          if (!error) {
+            alert('Registration Success');
+            navigate('/');
+          } else {
+            alert('Registration failed');
+          }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -99,7 +60,7 @@ export default function AuthRegister() {
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="firstname-signup">Nom*  :</InputLabel>
+                  <InputLabel htmlFor="firstname-signup">Nom*:</InputLabel>
                   <OutlinedInput
                     id="firstname-login"
                     type="text"
@@ -120,7 +81,7 @@ export default function AuthRegister() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="lastname-signup">Prenom*  :</InputLabel>
+                  <InputLabel htmlFor="lastname-signup">Prenom*:</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.PRENOM && errors.PRENOM)}
@@ -141,12 +102,12 @@ export default function AuthRegister() {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-signup">Email*  :</InputLabel>
+                  <InputLabel htmlFor="email-signup">Email*:</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.EMAIL && errors.EMAIL)}
                     id="email-signup"
-                    type="EMAIL"
+                    type="email"
                     value={values.EMAIL}
                     name="EMAIL"
                     onBlur={handleBlur}
@@ -162,7 +123,7 @@ export default function AuthRegister() {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="password-signup">Password*  :</InputLabel>
+                  <InputLabel htmlFor="password-signup">Password*:</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.PASSWORD && errors.PASSWORD)}
@@ -171,9 +132,7 @@ export default function AuthRegister() {
                     value={values.PASSWORD}
                     name="PASSWORD"
                     onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e);
-                    }}
+                    onChange={handleChange}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -198,11 +157,11 @@ export default function AuthRegister() {
                 <FormControl fullWidth sx={{ mt: 2 }}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item>
-                      <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
+                      <Box sx={{ bgcolor: '#FF5722', width: 85, height: 8, borderRadius: '7px' }} />
                     </Grid>
                     <Grid item>
                       <Typography variant="subtitle1" fontSize="0.75rem">
-                        {level?.label}
+                        Weak
                       </Typography>
                     </Grid>
                   </Grid>
@@ -210,7 +169,7 @@ export default function AuthRegister() {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  By Signing up, you agree to our &nbsp;
+                  By signing up, you agree to our &nbsp;
                   <Link variant="subtitle2" component={RouterLink} to="#">
                     Terms of Service
                   </Link>
@@ -220,22 +179,28 @@ export default function AuthRegister() {
                   </Link>
                 </Typography>
               </Grid>
-              {errors.submit && (
+              {error && (
                 <Grid item xs={12}>
-                  <FormHelperText error>{errors.submit}</FormHelperText>
+                  <FormHelperText error>{error}</FormHelperText>
                 </Grid>
               )}
               <Grid item xs={12}>
-             
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    Create Account
-                  </Button>
-                
+                <Button
+                  disableElevation
+                  disabled={loading || isSubmitting}
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Create Account
+                </Button>
               </Grid>
             </Grid>
           </form>
         )}
       </Formik>
-    </>
-  );
+    </>
+  );
 }

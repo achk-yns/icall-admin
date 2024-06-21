@@ -1,12 +1,12 @@
 // Navbar.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import Tooltip from '@mui/material/Tooltip';
-import { styled } from '@mui/system';
+
 import { UserProfile } from './';
 import avatar from '../data/avatar.jpg'
-import { useSelector } from 'react-redux';
+import { useAuth } from '../contexts/user/authContext';
 const NavButton = ({ title, customFunc, icon, color }) => (
   <Tooltip title={title} placement="bottom">
     <button 
@@ -22,7 +22,7 @@ const NavButton = ({ title, customFunc, icon, color }) => (
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   console.log(user)
   const handleActiveMenu = () => {
     // handle active menu logic
