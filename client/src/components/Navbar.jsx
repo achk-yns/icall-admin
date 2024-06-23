@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { UserProfile } from './';
 import avatar from '../data/avatar.jpg'
-import { useAuth } from '../contexts/user/authContext';
+import { useAuth } from '../contexts/authContext';
 const NavButton = ({ title, customFunc, icon, color }) => (
   <Tooltip title={title} placement="bottom">
     <button 

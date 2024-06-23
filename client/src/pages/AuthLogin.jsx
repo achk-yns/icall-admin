@@ -25,7 +25,7 @@ import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 
 // Context
-import { AuthContext } from '../contexts/user/authContext'; // Adjust path if necessary
+import { AuthContext } from '../contexts/authContext'; // Adjust path if necessary
 
 const AuthLogin = ({ isDemo = false }) => {
   const [checked, setChecked] = useState(false);

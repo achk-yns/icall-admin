@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Popover, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { DashboardOutlined, LogoutOutlined } from '@ant-design/icons';
-import { AuthContext } from '../contexts/user/authContext';
+import { AuthContext } from '../contexts/authContext';
 
 const UserProfile = ({ anchorEl, handleClose }) => {
   const { logout } = useContext(AuthContext);

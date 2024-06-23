@@ -6,7 +6,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { useStateContext } from '../contexts/ContextProvider';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine } from 'react-icons/ri';
-import { useAuth } from '../contexts/user/authContext';
+import { useAuth } from '../contexts/authContext';
 
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();

@@ -79,6 +79,29 @@ route.put("/:NOM/edit" , authMiddleware , async (req,res)=>{
     
 })
 
+route.put("/:NOM/edit/status" , authMiddleware , async (req,res)=>{
+    try {
+        const { NOM } = req.params;
+        const user_id = req.userId;
+        if (req.body) {
+            const FindRendezvous = await RendezVous.findOneAndUpdate(
+                { NOM, user_id },
+                req.body,
+                { new: true }
+            );
+            if (FindRendezvous) {
+                const allRendezVous = await RendezVous.find({ user_id });
+                res.status(200).send({ data: allRendezVous });
+            } else {
+                res.status(401).send({ message: "Aucun Rendez Vous avec ce nom" });
+            }
+        } 
+    } catch (error) {
+        res.status(500).send({ message: "Serveur error" });
+    }
+    
+    
+})
 
 
 route.delete('/:NOM' , authMiddleware , async (req,res) => {

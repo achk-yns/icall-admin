@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject, Search } from '@syncfusion/ej2-react-grids';
 import { styled } from '@mui/system';
 import { Header } from '../components';
 import { MenuItem, Select } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
-import FetchRend from '../Fetching/FetchRend';
+
+import { useRendezVous } from '../contexts/RendezVousContext';
 
 const CustomSelect = styled(Select)(({ theme }) => ({
   '& .MuiSelect-root': {
@@ -16,9 +17,6 @@ const CustomSelect = styled(Select)(({ theme }) => ({
   },
   '& .MuiSelect-icon': {
     color: 'blue',
-  },
-  '& .MuiSelect-select:focus': {
-    backgroundColor: 'lightblue',
   },
   '& .MuiMenuItem-root': {
     color: 'green',
@@ -38,30 +36,24 @@ const CustomSelect = styled(Select)(({ theme }) => ({
 }));
 
 const Orders = () => {
-  const [rendes, setRendes] = useState([]);
+  const { rendes, updateRendezVousStatus, deleteRendezVous } = useRendezVous();
   const navigate = useNavigate();
 
   const handleRowClick = (rowData) => {
-    const { NOM } = rowData;
-    navigate(`/Rendez-Vous/${NOM}`);
+    if (rowData && rowData.NOM) {
+      const { NOM } = rowData;
+      navigate(`/Rendez-Vous/${NOM}`);
+    } else {
+      console.error('Invalid rowData:', rowData);
+    }
   };
 
-  useEffect(() => {
-    const fetchRendez = async () => {
-      const data = await FetchRend.getRendezVous();
-      setRendes(data);
-    };
-    fetchRendez();
-  }, []);
-
-  const handleStatusChange = async (nom, newStatus) => {
-    await FetchRend.updateRendezVous(nom, { status: newStatus });
-      window.location.reload();
+  const handleStatusChange = (nom, newStatus) => {
+    updateRendezVousStatus(nom, newStatus);
   };
 
-  const handleDelete = async (NOM) => {
-    await FetchRend.deleteRendezVous(NOM); 
-    window.location.reload();
+  const handleDelete = (NOM) => {
+    deleteRendezVous(NOM);
   };
 
   const ordersGrid = [
@@ -72,7 +64,7 @@ const Orders = () => {
       textAlign: 'Center',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{fontSize:"16px"}}>{props.NOM}</p>
+        <p style={{ fontSize: "16px" }}>{props.NOM}</p>
       ),
     },
     {
@@ -82,7 +74,7 @@ const Orders = () => {
       textAlign: 'Center',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{fontSize:"16px"}}>{props.PRENOM}</p>
+        <p style={{ fontSize: "16px" }}>{props.PRENOM}</p>
       ),
     },
     {
@@ -92,7 +84,7 @@ const Orders = () => {
       width: '150',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{fontSize:"16px"}}>{props.TELEPHONE}</p>
+        <p style={{ fontSize: "16px" }}>{props.TELEPHONE}</p>
       ),
     },
     {
@@ -102,7 +94,7 @@ const Orders = () => {
       width: '150',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{fontSize:"16px"}}>{props.ADRESSE}</p>
+        <p style={{ fontSize: "16px" }}>{props.ADRESSE}</p>
       ),
     },
     {
@@ -112,14 +104,14 @@ const Orders = () => {
         <CustomSelect
           value={props.status}
           style={{
-            width:100,
-            height:40,
+            width: 100,
+            height: 40,
             backgroundColor:
               props.status === 'invalid'
                 ? 'lightcoral'
                 : props.status === 'valid'
-                ? 'lightgreen'
-                : '#ffeeba',
+                  ? 'lightgreen'
+                  : '#ffeeba',
             color: 'white',
           }}
           onChange={(e) => handleStatusChange(props.NOM, e.target.value)}
@@ -149,13 +141,16 @@ const Orders = () => {
 
   return (
     <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Rendez-vous" Route={{to:"create",text:"Ajouter"}} />
+      <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
       <ErrorBoundary>
+
         <GridComponent
           id="gridcomp"
-          dataSource={rendes.length ? rendes : []} // Ensure dataSource is an array
+          dataSource={rendes || []} // Ensure dataSource is an array
           allowPaging
           allowSorting
+          toolbar={['Search']}
+          width='auto'
           rowSelected={(e) => handleRowClick(e.data)}
           keyExtractor={(item, index) => item.NOM} // Ensure unique keys for rows
         >
@@ -164,7 +159,7 @@ const Orders = () => {
               <ColumnDirective key={index}  {...item} />
             ))}
           </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport]} />
+          <Inject services={[Resize, Sort, ContextMenu, Search, Filter, Page, ExcelExport, Edit, PdfExport]} />
         </GridComponent>
       </ErrorBoundary>
     </div>

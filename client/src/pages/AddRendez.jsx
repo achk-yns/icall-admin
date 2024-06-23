@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useSelector } from "react-redux";
+import { useAuth } from "../contexts/authContext";
 
 const AddRendez = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
-  const { user, token, loading, error } = useSelector((state) => state.auth);
+  const { token } = useAuth();
+
   const [formData, setFormData] = useState({
     status: "invalid",
     COMMENTAIRE: "",
@@ -51,26 +52,27 @@ const AddRendez = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form data submitted:", formData);
-
-    fetch(`http://localhost:3001/rendez-vous/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "token":token
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-    navigate("/");
+    try {
+      if(token){
+        fetch(`${process.env.REACT_APP_API_URL}rendez-vous/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "token":token
+          },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            navigate("/");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          }); 
+      }
+    } catch (error) {
+      console.error("Error: Server Error");
+    }
   };
 
   const nextStep = () => {

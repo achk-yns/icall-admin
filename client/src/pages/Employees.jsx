@@ -3,34 +3,33 @@ import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, Context
 
 
 import { Header } from '../components'
-import { useSelector } from 'react-redux'
 import { DeleteOutlined } from '@ant-design/icons'
+import { useAuth } from '../contexts/authContext'
 
 const Employees = () => {
-  const apiBaseUrl = process.env.UrlServer;
   const [usersData, setUsersData] = useState([])
-  const { user, token, loading } = useSelector((state) => state.auth);
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${apiBaseUrl}/users/`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'token': token
-        }
-      });
-      if (response.ok) {
-        const data =await response.json()
-        console.log("users",data);
-        setUsersData(data.data)
-      }
-    } catch (error) {
-      console.log("error Fetching users")
-    }
-  }
+  const {token} = useAuth();
+  
   useEffect(() => {
-    console.log(apiBaseUrl)
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}users/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          }
+        });
+        if (response.ok) {
+          const data =await response.json()
+          console.log("users",data);
+          setUsersData(data.data)
+        }
+      } catch (error) {
+        console.log("error Fetching users")
+      }
+    }
     fetchUsers();
-  }, [])
+  }, [token])
 
 
 
@@ -98,7 +97,7 @@ const Employees = () => {
             <ColumnDirective key={index} {...item} />
           ))}
         </ColumnsDirective>
-        <Inject services={[Page, Search, Toolbar]} />
+        <Inject services={[Page, Search ,Toolbar ,Resize,ContextMenu, Sort,Filter]} />
       </GridComponent>
     </div>
   )

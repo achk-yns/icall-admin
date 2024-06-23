@@ -29,8 +29,8 @@ const schema = mongoose.model("RendezVous" , {
       },
       status : {
         type: String,
-        enum: ['valid','invalid' , 'pending'],
-        default: 'invalid',
+        enum: ['passage','annule','installe','attente','confirme','injecte'],
+        default: 'injecte',
         
       },
       COMMENTAIRE: {

@@ -20,7 +20,7 @@ import Box from '@mui/material/Box';
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
-import { AuthContext } from '../contexts/user/authContext';
+import { AuthContext } from '../contexts/authContext';
 
 export default function AuthRegister() {
   const navigate = useNavigate();

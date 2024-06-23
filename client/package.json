@@ -21,7 +21,10 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
     "formik": "^2.4.6",
+    "https-browserify": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -30,7 +33,10 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "styled-components": "^6.1.11",
+    "url": "^0.11.3",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
   },
@@ -60,7 +66,6 @@
   },
   "devDependencies": {
     "crypto-browserify": "^3.12.0",
-    "dotenv": "^16.4.5",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "sass": "^1.77.4"

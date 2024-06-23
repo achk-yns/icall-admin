@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true); // Set loading state
       // Example fetch to your backend
-      const response = await fetch('http://localhost:3001/users/login', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         return; // No token found, return
       }
 
-      const response = await fetch('http://localhost:3001/users/token', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}users/token`, {
         headers: {
           'Content-Type': 'application/json',
           'token': `${token}`
@@ -83,8 +83,10 @@ export const AuthProvider = ({ children }) => {
 
   // UseEffect hook to load user data on component mount
   useEffect(() => {
-    loadUser(); // Load user data when component mounts
-  }, []);
+    if(token){
+      loadUser(); // Load user data when component mounts
+    }
+  }, [token]);
 
   // Context value to be consumed by useContext
   const authContextValue = {

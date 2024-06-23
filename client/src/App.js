@@ -6,19 +6,23 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar, Sidebar } from './components';
-import { Home, Orders, Employees } from './pages';
+import { Home, Orders, Employees ,Login ,Registration,DetailRend , AjouterRend } from './pages';
 import './App.css';
-import { AuthProvider, useAuth } from './contexts/user/authContext'; // Adjust path as needed
-import Login from './pages/Login';
-import RegisterPage from './pages/RegisterPage';
-import DetailRensez from './pages/DetailRensez';
-import AddRendez from './pages/AddRendez';
+import { AuthProvider, useAuth } from './contexts/authContext'; // Adjust path as needed
 import { useStateContext } from './contexts/ContextProvider';
+import { RendezVousProvider } from './contexts/RendezVousContext';
+
 
 const App = () => {
+  useEffect(()=>{
+    console.log(process.env.REACT_APP_API_URL);
+
+  },[])
   return (
     <AuthProvider>
-      <AppContent />
+      <RendezVousProvider>
+        <AppContent />
+      </RendezVousProvider>
     </AuthProvider>
   );
 };
@@ -27,10 +31,9 @@ const AppContent = () => {
   const { user, loading, token } = useAuth();
   const { activeMenu } = useStateContext();
 
-  useEffect(()=>{
-    console.log(token ,user);
-  },[token,user])
-
+  useEffect(() => {
+    console.log(token, user);
+  }, [token, user]);
 
   if (loading) {
     return (
@@ -66,11 +69,12 @@ const AppContent = () => {
                 <Routes>
                   <Route path='/' element={<Home />} />
                   <Route path='/Rendez-Vous' element={<Orders />} />
-                  <Route path='/Rendez-Vous/create' element={<AddRendez />} />
-                  <Route path='/Rendez-Vous/:NOM' element={<DetailRensez />} />
+                  <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                  <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
                   <Route path='/Utilisateurs' element={<Employees />} />
                   <Route path='*' element={<Navigate to='/' />} />
                 </Routes>
+                
               </div>
             </div>
           </>
@@ -78,7 +82,7 @@ const AppContent = () => {
           <div className='w-full min-h-screen flex items-center justify-center dark:bg-main-dark-bg bg-main-bg'>
             <Routes>
               <Route path='/login' element={<Login />} />
-              <Route path='/register' element={<RegisterPage />} />
+              <Route path='/register' element={<Registration />} />
               <Route path='*' element={<Navigate to='/login' />} />
             </Routes>
           </div>

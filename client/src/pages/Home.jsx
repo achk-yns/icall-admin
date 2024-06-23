@@ -1,5 +1,5 @@
 import React from 'react'
-import { earningData, SparklineAreaData, ecomPieChartData } from '../data/dummy'
+import { earningData } from '../data/dummy'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
