@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+
 // Create a context object
 export const AuthContext = createContext();
 
@@ -35,6 +36,30 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error.message);
       setLoading(false); // Ensure loading state is false on error
       throw new Error('Login failed'); // Handle login failure
+    }
+  };
+
+  const register = async (DATA) => {
+    try {
+      setLoading(true); // Set loading state
+      // Example fetch to your backend
+      const response = await fetch(`${process.env.REACT_APP_API_URL}users/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(DATA),
+      });
+      if (response.ok) {
+        setLoading(false);
+        return true; 
+      } else {
+        throw new Error('Registration File failed');
+      }
+    } catch (error) {
+      console.error('Registration error:', error.message);
+      setLoading(false); // Ensure loading state is false on error
+      throw new Error('Registration failed'); // Handle login failure
     }
   };
 
@@ -95,6 +120,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
+    register
   };
 
   // Provide the context value to the entire application

@@ -1,137 +1,88 @@
 const mongoose = require('mongoose');
 
-const schema = mongoose.model("RendezVous" , {
-    user_id :{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"User"
+const schema = mongoose.model("RendezVous", {
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
-    createdRv:{ type: Date, default: Date.now },
-      NOM: {
+    createdRv: { 
+        type: Date, 
+        default: Date.now 
+    },
+    STATUT: {
+        type: String,
+        enum: ['passage', 'annule', 'installe', 'attente', 'confirme', 'injecte'],
+        default: 'injecte'
+    },
+    DATE_VISITE: {
+        type: Date,
+        required: true
+    },
+    DATE_PRIS_RDV: {
+        type: Date,
+        required: true
+    },
+    NOM: {
         type: String,
         required: true,
-        unique:true
-      },
-      PRENOM: {
+        unique: true
+    },
+    PRENOM: {
         type: String,
         required: true
-      },
-      TELEPHONE: {
-        type: Number,
-        required: true
-      },
-      ADRESSE: {
+    },
+    ADRESSE_COMPLETE: {
         type: String,
         required: true
-      },
-      MAIL: {
+    },
+    CODE_POSTAL: {
         type: String,
-        required: false
-      },
-      status : {
+        required: true
+    },
+    MOBILE: {
         type: String,
-        enum: ['passage','annule','installe','attente','confirme','injecte'],
-        default: 'injecte',
-        
-      },
-      COMMENTAIRE: {
-          type: String,
-          required: false
-        },
-        //------------------------------------------ step 2 ---------------------------------------------------------------------
-      SURFACE_HABITABLE: {
-        type: Number,
-        required: false //default required (I make is false for testing)
-      },
-      REVENUE_FISCAL: {
-        type: Number,
-        required: false //default required (I make is false for testing)
-      },
-      TRAVAUX_A_PREVOIR: {
+        required: true
+    },
+    REF_PRODUIT: {
         type: String,
-        required: false
-      },
-      PRECARITE: {
-        type: String,
-        required: false
-      },
-      NOMBRE_HABITANTS_DECLARE_FISCALEMENT: {
-        type: Number,
-        
-        required: false //default required (I make is false for testing)
-      },
-      AVIS_FISCAL: {
-        type: String,
-        required: false
-      },
-      REF_FISCAL: {
-        type: String,
-        required: false
-      },
-      MODE_DE_CHAUFFAGE: {
-        type: String,
-        required: false
-      },
-      TYPE_DE_CHAUDIERE: {
-        type: String,
-        required: false
-      },
-      ANNEE_CHAUDIERE: {
+        required: true
+    },
+    SURFACE_HABITABLE: {
         type: Number,
         required: false
-      },
-      ANNEE_CONSTRUCTION: {
-        type: Number,
-        required: false
-      },
-      PROPRIETAIRE_DEPUIS: {
-        type: Number,
-        required: false
-      },
-      ISO_A_1e: {
-        type: String,
-        required: false
-      },
-      OK_POUR_ENLEVER_ANCIENNE_ISO: {
+    },
+    THERMOSTAT: {
         type: Boolean,
         required: false
-      },
-      SUPERFICIE_COMBLES: {
+    },
+    MAIL: {
+        type: String,
+        required: false
+    },
+    COMMENTAIRES: {
+        type: String,
+        required: false
+    },
+    TETE_THERMOSTATIQUE: {
+        type: Boolean,
+        required: false
+    },
+    INSTALLATEUR: {
+        type: String,
+        required: false
+    },
+    SOURCE: {
+        type: String,
+        required: false
+    },
+    PRIME: {
         type: Number,
         required: false
-      },
-      ACCES_COMBLES: {
+    },
+    RETOUR_INSTALLATEUR: {
         type: String,
         required: false
-      },
-      DPE_EFFECTUER: {
-        type: Boolean,
-        required: false
-      },
-      CODE_SECURITE_TRANSMETTRE_CLIENT: {
-        type: String,
-        required: false
-      },
-      TYPE_VITRAGE: {
-        type: String,
-        required: false
-      },
-      SOUS_SOL: {
-        type: Boolean,
-        required: false
-      },
-      VIDE_SANITAIRE: {
-        type: Boolean,
-        required: false
-      },
-      CAVE: {
-        type: Boolean,
-        required: false
-      },
+    }
+});
 
-      MITOYEN: {
-        type: Boolean,
-        required: false
-      }
-})
-
-module.exports = schema
+module.exports = schema;

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useAuth } from "../contexts/authContext";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useAuth } from '../contexts/authContext';
 
 const AddRendez = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -11,67 +13,63 @@ const AddRendez = () => {
   const { token } = useAuth();
 
   const [formData, setFormData] = useState({
-    status: "invalid",
-    COMMENTAIRE: "",
-    NOM: "",
-    PRENOM: "",
-    TELEPHONE: "",
-    ADRESSE: "",
-    MAIL: "",
-    SURFACE_HABITABLE: "",
-    REVENUE_FISCAL: "",
-    TRAVAUX_A_PREVOIR: "",
-    PRECARITE: "",
-    NOMBRE_HABITANTS_DECLARE_FISCALEMENT: "",
-    AVIS_FISCAL: "",
-    REF_FISCAL: "",
-    MODE_DE_CHAUFFAGE: "",
-    TYPE_DE_CHAUDIERE: "",
-    ANNEE_CHAUDIERE: "",
-    ANNEE_CONSTRUCTION: "",
-    PROPRIETAIRE_DEPUIS: "",
-    ISO_A_1e: "",
-    OK_POUR_ENLEVER_ANCIENNE_ISO: false,
-    SUPERFICIE_COMBLES: "",
-    ACCES_COMBLES: "",
-    DPE_EFFECTUER: false,
-    CODE_SECURITE_TRANSMETTRE_CLIENT: "",
-    TYPE_VITRAGE: "",
-    SOUS_SOL: false,
-    VIDE_SANITAIRE: false,
-    CAVE: false,
-    MITOYEN: false,
+    status: 'invalid',
+    COMMENTAIRES: '',
+    NOM: '',
+    PRENOM: '',
+    MOBILE: '',
+    ADRESSE_COMPLETE: '',
+    MAIL: '',
+    REF_PRODUIT: '',
+    SURFACE_HABITABLE: '',
+    THERMOSTAT: false,
+    TETE_THERMOSTATIQUE: false,
+    INSTALLATEUR: '',
+    SOURCE: '',
+    PRIME: '',
+    RETOUR_INSTALLATEUR: '',
+    DATE_VISITE: null,
+    DATE_PRISE_RDV: null,
+    DATE: null
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleDateChange = (date, name) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: date
     }));
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     try {
-      if(token){
+      if (token) {
         fetch(`${process.env.REACT_APP_API_URL}rendez-vous/`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            "token":token
+            'Content-Type': 'application/json',
+            token: token
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(formData)
         })
           .then((response) => response.json())
           .then((data) => {
-            navigate("/");
+            navigate('/');
           })
           .catch((error) => {
-            console.error("Error:", error);
-          }); 
+            console.error('Error:', error);
+          });
       }
     } catch (error) {
-      console.error("Error: Server Error");
+      console.error('Error: Server Error');
     }
   };
 
@@ -84,7 +82,7 @@ const AddRendez = () => {
   };
 
   return (
-    <div className="container mt-4 shadow-lg p-5 " style={{paddingRight:"20px"}}>
+    <div className="container mt-4 shadow-lg p-5" style={{ paddingRight: '20px' }}>
       {currentStep === 1 && (
         <>
           <h1 className="text-2xl font-semibold">Personal Information</h1>
@@ -102,11 +100,12 @@ const AddRendez = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">Prenom:</label>
+              <label className="block text-sm font-medium" htmlFor="PRENOM">Prenom:</label>
               <input
                 type="text"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                 name="PRENOM"
+                id="PRENOM"
                 value={formData.PRENOM}
                 onChange={handleChange}
                 required
@@ -114,72 +113,71 @@ const AddRendez = () => {
             </div>
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-medium">Email:</label>
+            <label className="block text-sm font-medium" htmlFor="MAIL">Email:</label>
             <input
               type="email"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
               name="MAIL"
+              id="MAIL"
               value={formData.MAIL}
               onChange={handleChange}
             />
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-medium">Adresse:</label>
+            <label className="block text-sm font-medium" htmlFor="ADRESSE_COMPLETE">Adresse:</label>
             <input
               type="text"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              name="ADRESSE"
-              value={formData.ADRESSE}
+              name="ADRESSE_COMPLETE"
+              id="ADRESSE_COMPLETE"
+              value={formData.ADRESSE_COMPLETE}
               onChange={handleChange}
               required
             />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="block text-sm font-medium">Telephone:</label>
+              <label className="block text-sm font-medium" htmlFor="MOBILE">Mobile:</label>
               <input
                 type="text"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="TELEPHONE"
-                value={formData.TELEPHONE}
+                name="MOBILE"
+                id="MOBILE"
+                value={formData.MOBILE}
                 onChange={handleChange}
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">Status:</label>
+              <label className="block text-sm font-medium" htmlFor="STATUT">Status:</label>
               <select
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="status"
-                value={formData.status}
+                name="STATUT"
+                id="STATUT"
+                value={formData.STATUT}
+                onChange={handleChange}
                 style={{
                   backgroundColor:
-                    formData.status === "valid"
-                      ? "green"
-                      : formData.status === "invalid"
-                      ? "red"
-                      : "yellow",
-                  color: "white",
+                    formData.STATUT === "injecte" ? "green" :
+                      formData.STATUT === "annule" ? "red" : "yellow",
+                  color: "white"
                 }}
-                onChange={handleChange}
               >
-                <option value="valid" style={{ backgroundColor: "white", color: "black" }} className="bg-white text-dark">
-                  Valid
-                </option>
-                <option value="invalid" style={{ backgroundColor: "white", color: "black" }} className="bg-red text-dark">
-                  Invalid
-                </option>
-                <option value="pending" style={{ backgroundColor: "white", color: "black" }} className="bg-yellow text-dark">
-                  Pending
-                </option>
+                <option value="passage">Passage</option>
+                <option value="annule">Annule</option>
+                <option value="installe">Installe</option>
+                <option value="attente">Attente</option>
+                <option value="confirme">Confirme</option>
+                <option value="injecte">Injecte</option>
               </select>
             </div>
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-medium">Commentaire:</label>
+            <label className="block text-sm font-medium" htmlFor="COMMENTAIRES">Commentaire:</label>
             <textarea
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              name="COMMENTAIRE"
+              name="COMMENTAIRES"
+              id="COMMENTAIRES"
               onChange={handleChange}
               cols="30"
               rows="5"
@@ -190,83 +188,63 @@ const AddRendez = () => {
 
       {currentStep === 2 && (
         <>
-          <h1 className="text-2xl font-semibold">House Details Form</h1>
+          <h1 className="text-2xl font-semibold">House Details</h1>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="block text-sm font-medium">Surface Habitable:</label>
+              <label className="block text-sm font-medium" htmlFor="SURFACE_HABITABLE">Surface Habitable:</label>
               <input
                 type="number"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                 name="SURFACE_HABITABLE"
+                id="SURFACE_HABITABLE"
                 value={formData.SURFACE_HABITABLE}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">Revenue Fiscal:</label>
+              <label className="block text-sm font-medium" htmlFor="THERMOSTAT">Thermostat:</label>
               <input
-                type="number"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="REVENUE_FISCAL"
-                value={formData.REVENUE_FISCAL}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium">Travaux à Prévoir:</label>
-              <input
-                type="number"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="TRAVAUX_A_PREVOIR"
-                value={formData.TRAVAUX_A_PREVOIR}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Précarité:</label>
-              <input
-                type="number"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="PRECARITE"
-                value={formData.PRECARITE}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium">
-                Nombre Habitants Déclaré Fiscalement:
-              </label>
-              <input
-                type="number"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="NOMBRE_HABITANTS_DECLARE_FISCALEMENT"
-                value={formData.NOMBRE_HABITANTS_DECLARE_FISCALEMENT}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Avis Fiscal:</label>
-              <input
-                type="number"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                name="AVIS_FISCAL"
-                value={formData.AVIS_FISCAL}
+                type="checkbox"
+                className="mt-1 block"
+                name="THERMOSTAT"
+                id="THERMOSTAT"
+                checked={formData.THERMOSTAT}
                 onChange={handleChange}
               />
             </div>
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-medium">Ref Fiscal:</label>
+            <label className="block text-sm font-medium" htmlFor="REF_PRODUIT">Ref Produit:</label>
             <input
               type="text"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              name="REF_FISCAL"
-              value={formData.REF_FISCAL}
+              name="REF_PRODUIT"
+              id="REF_PRODUIT"
+              value={formData.REF_PRODUIT}
               onChange={handleChange}
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="DATE_VISITE">Date de VISITE:</label>
+            <DatePicker
+              selected={formData.DATE_VISITE}
+              onChange={(date) => handleDateChange(date, 'DATE_VISITE')}
+              dateFormat="dd/MM/yyyy"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              id="DATE_VISITE"
+              name="DATE_VISITE"
+              required
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="DATE_PRISE_RDV">Date Prise de RDV:</label>
+            <DatePicker
+              selected={formData.DATE_PRISE_RDV}
+              onChange={(date) => handleDateChange(date, 'DATE_PRISE_RDV')}
+              dateFormat="dd/MM/yyyy"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              id="DATE_PRISE_RDV"
+              name="DATE_PRISE_RDV"
             />
           </div>
         </>
@@ -274,69 +252,51 @@ const AddRendez = () => {
 
       {currentStep === 3 && (
         <>
-          <h1 className="text-2xl font-semibold">Additional Details Form</h1>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.OK_POUR_ENLEVER_ANCIENNE_ISO}
-                  onChange={handleChange}
-                  name="OK_POUR_ENLEVER_ANCIENNE_ISO"
-                />
-              }
-              label="Ok Pour Enlever Ancienne Iso"
+          <h1 className="text-2xl font-semibold">Additional Information</h1>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="INSTALLATEUR">Installateur:</label>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              name="INSTALLATEUR"
+              id="INSTALLATEUR"
+              value={formData.INSTALLATEUR}
+              onChange={handleChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.DPE_EFFECTUER}
-                  onChange={handleChange}
-                  name="DPE_EFFECTUER"
-                />
-              }
-              label="DPE Effectuer"
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="SOURCE">Source:</label>
+            <input
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              name="SOURCE"
+              id="SOURCE"
+              value={formData.SOURCE}
+              onChange={handleChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.SOUS_SOL}
-                  onChange={handleChange}
-                  name="SOUS_SOL"
-                />
-              }
-              label="Sous Sol"
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="PRIME">Prime:</label>
+            <input
+              type="number"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              name="PRIME"
+              id="PRIME"
+              value={formData.PRIME}
+              onChange={handleChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.VIDE_SANITAIRE}
-                  onChange={handleChange}
-                  name="VIDE_SANITAIRE"
-                />
-              }
-              label="Vide Sanitaire"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.CAVE}
-                  onChange={handleChange}
-                  name="CAVE"
-                />
-              }
-              label="Cave"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.MITOYEN}
-                  onChange={handleChange}
-                  name="MITOYEN"
-                />
-              }
-              label="Mitoyen"
-            />
-          </FormGroup>
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium" htmlFor="RETOUR_INSTALLATEUR">Retour Installateur:</label>
+            <textarea
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              name="RETOUR_INSTALLATEUR"
+              id="RETOUR_INSTALLATEUR"
+              onChange={handleChange}
+              cols="30"
+              rows="5"
+            ></textarea>
+          </div>
         </>
       )}
 
@@ -344,13 +304,13 @@ const AddRendez = () => {
         {currentStep > 1 && (
           <button
             type="button"
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md shadow-sm"
+            className="px-4 py-2 bg-gray-500 text-white rounded-md shadow-sm"
             onClick={prevStep}
           >
             Previous
           </button>
         )}
-        {currentStep < 3 ? (
+        {currentStep < 3 && (
           <button
             type="button"
             className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm"
@@ -358,9 +318,10 @@ const AddRendez = () => {
           >
             Next
           </button>
-        ) : (
+        )}
+        {currentStep === 3 && (
           <button
-            type="submit"
+            type="button"
             className="px-4 py-2 bg-green-500 text-white rounded-md shadow-sm"
             onClick={handleSubmit}
           >

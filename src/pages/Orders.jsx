@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject, Search } from '@syncfusion/ej2-react-grids';
 import { styled } from '@mui/system';
 import { Header } from '../components';
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Select, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
-
 import { useRendezVous } from '../contexts/RendezVousContext';
 
 const CustomSelect = styled(Select)(({ theme }) => ({
@@ -13,7 +12,7 @@ const CustomSelect = styled(Select)(({ theme }) => ({
     backgroundColor: 'white',
     borderRadius: '10px',
     padding: '8px',
-    width: '50px !important'
+    width: '100px !important'
   },
   '& .MuiSelect-icon': {
     color: 'blue',
@@ -38,6 +37,19 @@ const CustomSelect = styled(Select)(({ theme }) => ({
 const Orders = () => {
   const { rendes, updateRendezVousStatus, deleteRendezVous } = useRendezVous();
   const navigate = useNavigate();
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
 
   const handleRowClick = (rowData) => {
     if (rowData && rowData.NOM) {
@@ -54,6 +66,16 @@ const Orders = () => {
 
   const handleDelete = (NOM) => {
     deleteRendezVous(NOM);
+  };
+
+  const filteredData = rendes.filter(order => {
+    const statusMatch = statusFilter ? order.status === statusFilter : true;
+    const dateMatch = (dateFrom && dateTo) ? (new Date(order.createdRv) >= new Date(dateFrom) && new Date(order.createdRv) <= new Date(dateTo)) : true;
+    return statusMatch && dateMatch;
+  });
+
+  const handleFilterApply = () => {
+    setFilterOpen(false);
   };
 
   const ordersGrid = [
@@ -125,6 +147,16 @@ const Orders = () => {
       width: '120',
     },
     {
+      headerText: 'Date de creation ',
+      field: 'createdRv',
+      textAlign: 'Center',
+      width: '150',
+      headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
+      template: (props) => (
+        <p style={{ fontSize: "16px" }}>{formatDate(props.createdRv)}</p>
+      ),
+    },
+    {
       headerText: 'Actions',
       width: '150',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
@@ -137,16 +169,53 @@ const Orders = () => {
         </div>
       ),
     },
+    
   ];
 
   return (
     <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
       <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
+      <Button variant="outlined" onClick={() => setFilterOpen(true)}>Filter</Button>
+      <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
+        <DialogTitle>Filter Orders</DialogTitle>
+        <DialogContent>
+          <CustomSelect
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            displayEmpty
+            style={{ marginBottom: '20px', width: '100%' }}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="invalid">Invalid</MenuItem>
+            <MenuItem value="valid">Valid</MenuItem>
+            <MenuItem value="pending">Pending</MenuItem>
+          </CustomSelect>
+          <TextField
+            label="Date From"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            style={{ marginBottom: '20px', width: '100%' }}
+          />
+          <TextField
+            label="Date To"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            style={{ marginBottom: '20px', width: '100%' }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+          <Button onClick={handleFilterApply}>Apply</Button>
+        </DialogActions>
+      </Dialog>
       <ErrorBoundary>
-
         <GridComponent
           id="gridcomp"
-          dataSource={rendes || []} // Ensure dataSource is an array
+          dataSource={filteredData || []} // Ensure dataSource is an array
           allowPaging
           allowSorting
           toolbar={['Search']}
@@ -189,3 +258,4 @@ class ErrorBoundary extends React.Component {
 }
 
 export default Orders;
+
