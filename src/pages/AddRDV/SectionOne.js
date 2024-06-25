@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { Button, Container, Typography, TextField } from '@mui/material';
+import SectionOne from '../AddRDV/SectionOne';
+import SectionTwo from '../AddRDV/SectionTwo';
+import SectionThree from '../AddRDV/SectionThree';
+import { useRendezVous } from '../../contexts/RendezVousContext';
 
-import { Button, Container, Typography } from '@mui/material';
-import SectionOne from './AddRDV/SectionOne';
-import SectionTwo from './AddRDV/SectionTwo';
-import SectionThree from './AddRDV/SectionThree';
-import { useRendezVous } from '../contexts/RendezVousContext';
 
 const AddRendez = () => {
   const navigate = useNavigate();
-  const {addRendezVous} = useRendezVous()
+  const { addRendezVous } = useRendezVous();
 
   const [formData, setFormData] = useState({
     status: 'injecte',
@@ -39,32 +34,38 @@ const AddRendez = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    // Ensure `value` is never null
+    const updatedValue = type === 'checkbox' ? checked : (value === null ? '' : value);
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: updatedValue
     }));
   };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
-      // await addRendezVous(formData)
+      e.preventDefault();
+      console.log(formData);
+      await addRendezVous(formData);
       navigate('/');
     } catch (error) {
       console.error('Error: Server Error');
     }
   };
 
-
   return (
-    
     <Container className="p-4">
-      <Typography variant="h4" className="mb-4">Ajouter Un Rendez-vous</Typography>
+      <Typography variant="h4" className="mb-4">
+        Ajouter Un Rendez-vous
+      </Typography>
       <form onSubmit={handleSubmit}>
         <SectionOne formState={formData} handleChange={handleChange} />
         <SectionTwo formState={formData} handleChange={handleChange} />
         <SectionThree formState={formData} handleChange={handleChange} />
-        <Button type="submit" variant="contained" color="primary" className="mt-4">Ajouter</Button>
+        <Button type="submit" variant="contained" color="primary" className="mt-4">
+          Ajouter
+        </Button>
       </form>
     </Container>
   );

@@ -1,32 +1,14 @@
-// Navbar.jsx
 import React, { useState } from 'react';
-import { AiOutlineMenu } from 'react-icons/ai';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import Tooltip from '@mui/material/Tooltip';
-
-import { UserProfile } from './';
-import avatar from '../data/avatar.jpg'
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
-const NavButton = ({ title, customFunc, icon, color }) => (
-  <Tooltip title={title} placement="bottom">
-    <button 
-      type='button'
-      onClick={() => customFunc()}
-      style={{ color }}
-      className='relative text-xl rounded-full p-3 hover:bg-light-gray'
-    >
-      {icon}
-    </button>
-  </Tooltip>
-);
+
+import avatar from '../data/avatar.jpg';
+import UserProfile from './UserProfile';
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user } = useAuth();
-  console.log(user)
-  const handleActiveMenu = () => {
-    // handle active menu logic
-  };
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,45 +19,39 @@ const Navbar = () => {
   };
 
   return (
-    <div className='flex justify-between p-2 md:mx-6 relative'> 
-      <NavButton 
-        title="Menu"
-        customFunc={handleActiveMenu}
-        color='blue'
-        icon={<AiOutlineMenu />}
-      />
+    <div className="flex justify-between p-2  relative bg-gray-800 text-white">
+      {/* Logo and Title */}
+      <div>
+        <h1 className="text-lg font-bold">IcallManager<sub>{user.isAdmin ? "admin" : "agent"}</sub></h1>
+        
+      </div>
 
-      <div className='flex'>
-        <div 
-          className='flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg'
+      {/* Navigation Links */}
+      <div className="flex items-center space-x-4">
+        <Link to="/Rendez-vous" className="hover:text-gray-300">
+          RDVs
+        </Link>
+        {user.isAdmin && (
+          <Link to="/Utilisateurs" className="hover:text-gray-300">
+            Utilisateurs
+          </Link>
+        )}
+      </div>
+
+      {/* User Profile */}
+      <div className="flex items-center">
+        <div
+          className="flex items-center gap-2 cursor-pointer p-1 hover:bg-gray-700 rounded-lg"
           onClick={handleProfileClick}
         >
-          <img src={avatar} className='rounded-full w-8 h-8' alt='user-profile'/>
-          <p>
-             <span className='text-gray-400 text-20'>{user.NOM}</span> {' '}
-             
-            </p>
-          <MdKeyboardArrowDown className='text-gray-400 text-14'/>
+          <img src={avatar} className="rounded-full w-8 h-8" alt="user-profile" />
+          <p className="text-gray-400 text-sm">{user.NOM}</p>
+          <MdKeyboardArrowDown className="text-gray-400 text-sm" />
         </div>
         <UserProfile anchorEl={anchorEl} handleClose={handleClose} />
       </div>
     </div>
   );
-}
+};
 
 export default Navbar;
-
-        // <TooltipComponent content='Profile' position='BottomCenter'>
-        //   <div 
-        //     className='flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg'
-        //     onClick={() => handleClick('userProfile')}
-        //   >
-        //     <img src={avatar} className='rounded-full w-8 h-8' alt='user-profile'/>
-        //     <p>
-        //       <span className='text-gray-400 text-14'>Hi,</span> {' '}
-        //       <span className='text-gray-400 font-bold ml-1 text-14'>Admin</span>
-        //     </p>
-        //     <MdKeyboardArrowDown className='text-gray-400 text-14'/>
-        //   </div>
-        // </TooltipComponent>
-        // import avatar from '../data/avatar.jpg'

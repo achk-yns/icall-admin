@@ -60,6 +60,7 @@ function DetailRensez() {
                                 </p>
                             </div>
                         </div>
+                        
                     )}
                     {step === 2 && (
                         <div className="border shadow-lg p-5 mt-5 grid grid-cols-2 gap-4">

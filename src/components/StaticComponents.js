@@ -2,11 +2,12 @@ import React from 'react'
 
 export default function StaticComponents({Data}) {
     return (
-        <div className='flex m-3 flex-wrap justify-start gap-1  items-center' >
+      
+        <div className='flex md:m-3 flex-wrap justify-center gap-1  items-center' >
     
-          {Data?.map((item) => (
+          {Data?.map((item,index) => (
             <div
-              key={item.title}
+              key={index}
               className='bg-white h-30 mx-3 dark:text-gray-200 bg-white dark:bg-secondary-dark-bg md:w-56  drop-shadow-xl items-center border flex  p-4 pt-5 rounded-2xl'
             ><div>
 
@@ -22,7 +23,7 @@ export default function StaticComponents({Data}) {
                 
                 <p className='mt-3'>
                     <span className='text-lg font-semibold'>
-                    {item.amount}
+                    {item.amount} {item.Tag}
                     </span>
                 </p>
 

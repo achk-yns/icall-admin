@@ -3,7 +3,7 @@ const route = express.Router()
 const RendezVous = require("../Models/RendezVous")
 const localStorage = require('localStorage');
 const authMiddleware = require("../middlewares/AuthMiddleware")
-
+const User = require('../Models/User'); 
 
 route.post('/',authMiddleware,async function(req, res){
     try {
@@ -22,7 +22,6 @@ route.post('/',authMiddleware,async function(req, res){
         console.log(error)
         res.status(500).send({message: "Server Error"} )
     }
-
 })
 
 
@@ -33,21 +32,23 @@ route.get('/', authMiddleware, async (req, res) => {
         let AllData = [];
         
         if (req.isAdmin) {
-            AllData = await RendezVous.find({});
+            AllData = await RendezVous.find({}).populate('user_id', 'NOM PRENOM EMAIL');
         } else {
-            AllData = await RendezVous.find({ user_id });
+            AllData = await RendezVous.find({ user_id }).populate('user_id', 'NOM PRENOM EMAIL');
         }
         
         if (AllData && AllData.length > 0) {
+            console.log("Data found, sending response");
             res.status(200).send({ data: AllData });
         } else {
+            console.log("No data found, sending response with message");
             res.status(200).send({ data: [], message: "Aucun Rendez Vous" });
         }
     } catch (error) {
+        console.error("Error fetching data:", error);
         res.status(500).send({ message: "serveur error" });
     }
 });
-
 
 route.get('/:NOM',authMiddleware,async (req,res) => {
     const {NOM} = req.params 

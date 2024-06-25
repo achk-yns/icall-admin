@@ -12,14 +12,28 @@ export const useRendezVous = () => useContext(RendezVousContext);
 export const RendezVousProvider = ({ children }) => {
   const { token } = useAuth(); // Get authentication token from authContext
   const [rendes, setRendes] = useState([]);
-  const CountRendes = rendes.length
-  // Fetch all Rendez Vous on component mount
-  
+  const [CountRendes,setCounterRDV]=useState(0)
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
+  const isCurrentMonth = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+  };
+  
+  const [countCurrentMonthRendes,setCountCurrentMonthRendes] = useState(0);
+  const [countRDVInstalle,setCountRDVInstalle] = useState(0);
+  const [countCurrentMonthRDVInstalle,setCountCurrentMonthRDVInstalle] = useState(0);
+ 
   useEffect(() => {
     const fetchRendezVous = async () => {
       try {
         const data = await FetchRend.getRendezVous();
+        setCounterRDV(data.length);
+        setCountCurrentMonthRendes(data.filter(order => isCurrentMonth(order.createdRv)).length);
+        setCountRDVInstalle(data.filter(order => order.STATUT==="installe" ).length);
+        setCountCurrentMonthRDVInstalle(data.filter(order => isCurrentMonth(order.createdRv) && order.STATUT==="installe" ).length);
         setRendes(data);
       } catch (error) {
         console.error('Error fetching Rendez Vous:', error);
@@ -74,13 +88,36 @@ export const RendezVousProvider = ({ children }) => {
     }
   };
 
+  const handleSearchTermChange = (term) => {
+    setSearchTerm(term);
+    filterData(term);
+  };
+
+  const filterData = (value) => {
+    if (value.trim() === '') {
+      setSearchResults([]);
+    } else {
+      const filteredResults = rendes.filter(item =>
+        Object.values(item).some(field =>
+          field && field.toString().toLowerCase().includes(value.toLowerCase())
+        )
+      );
+      setSearchResults(filteredResults);
+    }
+  };
+
+
   // Context value to be provided
   const contextValue = {
-    rendes,
+    rendes: searchTerm ? searchResults : rendes, 
     addRendezVous,
     updateRendezVousStatus,
     deleteRendezVous,
-    CountRendes
+    CountRendes,
+    countCurrentMonthRendes,
+    countRDVInstalle,
+    countCurrentMonthRDVInstalle,
+    handleSearchTermChange,
   };
 
   return (
