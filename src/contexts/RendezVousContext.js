@@ -12,7 +12,7 @@ export const useRendezVous = () => useContext(RendezVousContext);
 export const RendezVousProvider = ({ children }) => {
   const { token } = useAuth(); // Get authentication token from authContext
   const [rendes, setRendes] = useState([]);
-
+  const CountRendes = rendes.length
   // Fetch all Rendez Vous on component mount
   
 
@@ -54,8 +54,8 @@ export const RendezVousProvider = ({ children }) => {
   // Function to update status of a Rendez Vous
   const updateRendezVousStatus = async (nom, newStatus) => {
     try {
-      const data = await FetchRend.updateRendezVousStatus(nom, { status: newStatus });
-      setRendes(rendes.map(rendez => (rendez.NOM === nom ? { ...rendez, status: newStatus } : rendez)));
+      const data = await FetchRend.updateRendezVousStatus(nom, { STATUT: newStatus });
+      setRendes(rendes.map(rendez => (rendez.NOM === nom ? { ...rendez, STATUT: newStatus } : rendez)));
     } catch (error) {
       console.error('Error updating Rendez Vous status:', error);
       // Handle error as needed
@@ -80,6 +80,7 @@ export const RendezVousProvider = ({ children }) => {
     addRendezVous,
     updateRendezVousStatus,
     deleteRendezVous,
+    CountRendes
   };
 
   return (

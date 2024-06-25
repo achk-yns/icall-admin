@@ -6,6 +6,8 @@ import { MenuItem, Select, Button, TextField, Dialog, DialogActions, DialogConte
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRendezVous } from '../contexts/RendezVousContext';
+import StaticComponents from '../components/StaticComponents';
+import { LuCalendarClock } from "react-icons/lu";
 
 const CustomSelect = styled(Select)(({ theme }) => ({
   '& .MuiSelect-root': {
@@ -35,7 +37,7 @@ const CustomSelect = styled(Select)(({ theme }) => ({
 }));
 
 const Orders = () => {
-  const { rendes, updateRendezVousStatus, deleteRendezVous } = useRendezVous();
+  const { rendes, updateRendezVousStatus, CountRendes,deleteRendezVous } = useRendezVous();
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
@@ -77,7 +79,16 @@ const Orders = () => {
   const handleFilterApply = () => {
     setFilterOpen(false);
   };
-
+  const DataStatics =  [
+    {
+      icon: <LuCalendarClock />,
+      amount:CountRendes,
+      title: 'Total RDVs',
+      iconColor: 'rgb(255, 244, 229)',
+      iconBg: 'rgb(254, 201, 15)',
+      pcColor: 'green-600',
+      },
+      ];
   const ordersGrid = [
     {
       headerText: 'Nom',
@@ -101,46 +112,50 @@ const Orders = () => {
     },
     {
       headerText: 'Telephone',
-      field: 'TELEPHONE',
+      field: 'MOBILE',
       textAlign: 'Center',
       width: '150',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{ fontSize: "16px" }}>{props.TELEPHONE}</p>
+        <p style={{ fontSize: "16px" }}>{props.MOBILE}</p>
       ),
     },
     {
       headerText: 'Adresse',
-      field: 'ADRESSE',
+      field: 'ADRESSE_COMPLETE',
       textAlign: 'Center',
       width: '150',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{ fontSize: "16px" }}>{props.ADRESSE}</p>
+        <p style={{ fontSize: "16px" }}>{props.ADRESSE_COMPLETE}</p>
       ),
     },
     {
-      headerText: 'Status',
+      headerText: 'Statut',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
         <CustomSelect
-          value={props.status}
+          value={props.STATUT}
           style={{
             width: 100,
             height: 40,
             backgroundColor:
-              props.status === 'invalid'
+              props.status === 'annule'
                 ? 'lightcoral'
-                : props.status === 'valid'
+                : props.status === 'injecte'
                   ? 'lightgreen'
                   : '#ffeeba',
-            color: 'white',
+            color: 'black',
           }}
           onChange={(e) => handleStatusChange(props.NOM, e.target.value)}
         >
-          <MenuItem value="invalid">Invalid</MenuItem>
-          <MenuItem value="valid">Valid</MenuItem>
-          <MenuItem value="pending">Pending</MenuItem>
+          
+                <MenuItem value="passage">Passage</MenuItem>
+                <MenuItem value="annule">Annule</MenuItem>
+                <MenuItem value="installe">Installe</MenuItem>
+                <MenuItem value="attente">Attente</MenuItem>
+                <MenuItem value="confirme">Confirme</MenuItem>
+                <MenuItem value="injecte">Injecte</MenuItem>
         </CustomSelect>
       ),
       textAlign: 'Center',
@@ -173,7 +188,8 @@ const Orders = () => {
   ];
 
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
+    <div className="m-2 md:m-10 p-2 md:p-10   rounded-3xl">
+      <StaticComponents Data={DataStatics}/>
       <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
       <Button variant="outlined" onClick={() => setFilterOpen(true)}>Filter</Button>
       <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>

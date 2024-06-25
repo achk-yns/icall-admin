@@ -8,7 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Initialize with null or initial user state
   const [token, setToken] = useState(localStorage.getItem("token") || null); // Initialize with null or initial token state
-  const [loading, setLoading] = useState(true); // Set initial loading state
+  const [loading, setLoading] = useState(false); // Set initial loading state
 
   // Example login function
   const login = async (email, password) => {
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Login failed'); // Handle login failure
     }
   };
-
+  
   const register = async (DATA) => {
     try {
       setLoading(true); // Set loading state
@@ -108,9 +108,9 @@ export const AuthProvider = ({ children }) => {
 
   // UseEffect hook to load user data on component mount
   useEffect(() => {
-    if(token){
-      loadUser(); // Load user data when component mounts
-    }
+      if(token){
+        loadUser(); // Load user data when component mounts
+      }
   }, [token]);
 
   // Context value to be consumed by useContext
@@ -118,9 +118,10 @@ export const AuthProvider = ({ children }) => {
     user,
     token,
     loading,
+    setLoading,
+    register,
     login,
     logout,
-    register
   };
 
   // Provide the context value to the entire application

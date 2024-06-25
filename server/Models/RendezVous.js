@@ -37,7 +37,7 @@ const schema = mongoose.model("RendezVous", {
     },
     CODE_POSTAL: {
         type: String,
-        required: true
+        required: false
     },
     MOBILE: {
         type: String,
@@ -45,7 +45,7 @@ const schema = mongoose.model("RendezVous", {
     },
     REF_PRODUIT: {
         type: String,
-        required: true
+        required: false
     },
     SURFACE_HABITABLE: {
         type: Number,

@@ -13,7 +13,7 @@ const AddRendez = () => {
   const { token } = useAuth();
 
   const [formData, setFormData] = useState({
-    status: 'invalid',
+    status: 'injecte',
     COMMENTAIRES: '',
     NOM: '',
     PRENOM: '',
@@ -29,7 +29,7 @@ const AddRendez = () => {
     PRIME: '',
     RETOUR_INSTALLATEUR: '',
     DATE_VISITE: null,
-    DATE_PRISE_RDV: null,
+    DATE_PRIS_RDV: null,
     DATE: null
   });
 
@@ -51,6 +51,7 @@ const AddRendez = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
+      console.log(formData);
       if (token) {
         fetch(`${process.env.REACT_APP_API_URL}rendez-vous/`, {
           method: 'POST',
@@ -160,7 +161,7 @@ const AddRendez = () => {
                   backgroundColor:
                     formData.STATUT === "injecte" ? "green" :
                       formData.STATUT === "annule" ? "red" : "yellow",
-                  color: "white"
+                  color: "black"
                 }}
               >
                 <option value="passage">Passage</option>
@@ -237,14 +238,14 @@ const AddRendez = () => {
             />
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-medium" htmlFor="DATE_PRISE_RDV">Date Prise de RDV:</label>
+            <label className="block text-sm font-medium" htmlFor="DATE_PRIS_RDV">Date Prise de RDV:</label>
             <DatePicker
-              selected={formData.DATE_PRISE_RDV}
-              onChange={(date) => handleDateChange(date, 'DATE_PRISE_RDV')}
+              selected={formData.DATE_PRIS_RDV}
+              onChange={(date) => handleDateChange(date, 'DATE_PRIS_RDV')}
               dateFormat="dd/MM/yyyy"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              id="DATE_PRISE_RDV"
-              name="DATE_PRISE_RDV"
+              id="DATE_PRIS_RDV"
+              name="DATE_PRIS_RDV"
             />
           </div>
         </>

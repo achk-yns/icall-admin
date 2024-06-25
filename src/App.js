@@ -28,11 +28,14 @@ const App = () => {
 };
 
 const AppContent = () => {
-  const { user, loading, token } = useAuth();
+  const { user, loading, token ,setLoading} = useAuth();
   const { activeMenu } = useStateContext();
 
   useEffect(() => {
     console.log(token, user);
+    if(!token){
+      setLoading(false);
+    }
   }, [token, user]);
 
   if (loading) {

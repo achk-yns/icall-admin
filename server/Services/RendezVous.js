@@ -19,9 +19,10 @@ route.post('/',authMiddleware,async function(req, res){
         res.status(401).send({message: " Rendez vous invalid  or  created before "} )
     }
     } catch (error) {
+        console.log(error)
         res.status(500).send({message: "Server Error"} )
     }
-    
+
 })
 
 
