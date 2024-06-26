@@ -15,26 +15,17 @@ route.get("/token",authMiddleFunc,async (req,res)=>{
 route.post("/login", async (req, res) => {
   try {
     const { EMAIL, PASSWORD } = req.body;
-
-    // Vérification des champs requis
     if (!EMAIL || !PASSWORD) {
       return res.status(400).send({ message: "Email et mot de passe sont requis" });
     }
-
-    // Recherche de l'utilisateur
     const FindUser = await User.findOne({ EMAIL });
-
     if (!FindUser) {
       return res.status(401).send({ message: "Email et Mot de passe invalide" });
     }
-
-    // Vérification du mot de passe
     const checkPwd = await bcrypt.compare(PASSWORD, FindUser.PASSWORD);
     if (!checkPwd) {
       return res.status(400).send({ message: "Email et Mot de passe invalide" });
     }
-
-    // Génération du token JWT
     try {
       const { _id, ROLE } = FindUser;
       const Token = await jwt.sign({ _id, ROLE }, process.env.Jwt_SECRETKEY);

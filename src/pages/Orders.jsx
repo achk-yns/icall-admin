@@ -10,8 +10,10 @@ import StaticComponents from '../components/StaticComponents';
 import { LuCalendarClock } from "react-icons/lu";
 import { useAuth } from '../contexts/authContext';
 import { FaFilter } from "react-icons/fa6";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { MdOutlineEditCalendar } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdOutlineEditCalendar } from "react-icons/md";
+
+import * as XLSX from 'xlsx';
+
 
 const CustomSelect = styled(Select)(() => ({
   '& .MuiSelect-root': {
@@ -48,8 +50,6 @@ const Orders = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -180,32 +180,32 @@ const Orders = () => {
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
         <CustomSelect
-      value={props.STATUT}
-      style={{
-        width: 100,
-        height: 40,
-        backgroundColor:
-          props.status === 'annule'
-            ? 'lightcoral'
-            : props.status === 'injecte'
-              ? 'lightgreen'
-              : props.status === 'installe'
-              ? '#afeeee' 
-              :props.status === 'attente'
-              ?'#add8e6'
-              :props.status === 'confirme'
-              ?'#98fb98': 'lightgreen',
-        color: 'black',
-      }}
-      onChange={(e) => handleStatusChange(props.NOM, e.target.value)}
-    >
-      <MenuItem value="passage" style={{ backgroundColor: '#ffeeba' }}>Passage</MenuItem>
-      <MenuItem value="annule" style={{ backgroundColor: 'lightcoral' }}>Annulé</MenuItem>
-      <MenuItem value="installe" style={{ backgroundColor: '#afeeee' }}>Installé</MenuItem>
-      <MenuItem value="attente" style={{ backgroundColor: '#add8e6' }}>Attenté</MenuItem>
-      <MenuItem value="confirme" style={{ backgroundColor: '#98fb98' }}>Confirmé</MenuItem>
-      <MenuItem value="injecte" style={{ backgroundColor: 'lightgreen' }}>Injecté</MenuItem>
-    </CustomSelect>
+          value={props.STATUT}
+          style={{
+            width: 100,
+            height: 40,
+            backgroundColor:
+              props.status === 'annule'
+                ? 'lightcoral'
+                : props.status === 'injecte'
+                  ? 'lightgreen'
+                  : props.status === 'installe'
+                    ? '#afeeee'
+                    : props.status === 'attente'
+                      ? '#add8e6'
+                      : props.status === 'confirme'
+                        ? '#98fb98' : 'lightgreen',
+            color: 'black',
+          }}
+          onChange={(e) => handleStatusChange(props.NOM, e.target.value)}
+        >
+          <MenuItem value="passage" style={{ backgroundColor: '#ffeeba' }}>Passage</MenuItem>
+          <MenuItem value="annule" style={{ backgroundColor: 'lightcoral' }}>Annulé</MenuItem>
+          <MenuItem value="installe" style={{ backgroundColor: '#afeeee' }}>Installé</MenuItem>
+          <MenuItem value="attente" style={{ backgroundColor: '#add8e6' }}>Attenté</MenuItem>
+          <MenuItem value="confirme" style={{ backgroundColor: '#98fb98' }}>Confirmé</MenuItem>
+          <MenuItem value="injecte" style={{ backgroundColor: 'lightgreen' }}>Injecté</MenuItem>
+        </CustomSelect>
       ),
       field: 'STATUT',
       width: '120',
@@ -221,7 +221,7 @@ const Orders = () => {
         <p style={{ fontSize: "16px" }}>{formatDate(props.createdRv)}</p>
       ),
     },
-    user.ROLE === "admin"? {
+    user.ROLE === "admin" ? {
       headerText: 'Actions',
       width: '100',
       textAlign: 'Center',
@@ -239,7 +239,7 @@ const Orders = () => {
             onClick={() => handleDelete(props.NOM)}
             style={{ color: 'red' }}
           >
-            <DeleteOutlined  style={{ fontSize: '1.5rem' }}/>
+            <DeleteOutlined style={{ fontSize: '1.5rem' }} />
           </button>
           <button
             type="button"
@@ -249,7 +249,7 @@ const Orders = () => {
           </button>
         </div>
       ),
-    }:{
+    } : {
       headerText: 'Actions',
       width: '100',
       textAlign: 'Center',
@@ -273,82 +273,92 @@ const Orders = () => {
     },
   ].filter(Boolean);
 
+  const exportToXLSX = () => {
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'RendezVous');
+    XLSX.writeFile(wb, 'rendezvous.xlsx');
+  };
+
   return (
-    <div className="p-4  rounded-3xl " style={{ marginBottom: 40  }}>
+    <div className="p-4 rounded-3xl" style={{ marginBottom: 40 }}>
 
       <StaticComponents Data={DataStatics} />
       <Container>
-      <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
-      <div className='flex'>
-        <div >
-        <FaFilter onClick={() => setFilterOpen(true)} className='m-2' />
-        <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
-          <DialogTitle>Filter Orders</DialogTitle>
-          <DialogContent>
-            <CustomSelect
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              displayEmpty
-              style={{ marginBottom: '20px', width: '100%' }}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="passage" style={{ backgroundColor: '#ffeeba' }}>Passage</MenuItem>
-              <MenuItem value="annule" style={{ backgroundColor: 'lightcoral' }}>Annulé</MenuItem>
-              <MenuItem value="installe" style={{ backgroundColor: '#afeeee' }}>Installé</MenuItem>
-              <MenuItem value="attente" style={{ backgroundColor: '#add8e6' }}>Attenté</MenuItem>
-              <MenuItem value="confirme" style={{ backgroundColor: '#98fb98' }}>Confirmé</MenuItem>
-              <MenuItem value="injecte" style={{ backgroundColor: 'lightgreen' }}>Injecté</MenuItem>
-            </CustomSelect>
-            <TextField
-              label="Date From"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              style={{ marginBottom: '20px', width: '100%' }}
-            />
-            <TextField
-              label="Date To"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              style={{ marginBottom: '20px', width: '100%' }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
-            <Button onClick={handleFilterApply}>Apply</Button>
-          </DialogActions>
-        </Dialog>
+        <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
+        <div className='flex'>
+          <div >
+            <FaFilter onClick={() => setFilterOpen(true)} className='m-2' />
+            <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
+              <DialogTitle>Filter Orders</DialogTitle>
+              <DialogContent>
+                <CustomSelect
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  displayEmpty
+                  style={{ marginBottom: '20px', width: '100%' }}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="passage" style={{ backgroundColor: '#ffeeba' }}>Passage</MenuItem>
+                  <MenuItem value="annule" style={{ backgroundColor: 'lightcoral' }}>Annulé</MenuItem>
+                  <MenuItem value="installe" style={{ backgroundColor: '#afeeee' }}>Installé</MenuItem>
+                  <MenuItem value="attente" style={{ backgroundColor: '#add8e6' }}>Attenté</MenuItem>
+                  <MenuItem value="confirme" style={{ backgroundColor: '#98fb98' }}>Confirmé</MenuItem>
+                  <MenuItem value="injecte" style={{ backgroundColor: 'lightgreen' }}>Injecté</MenuItem>
+                </CustomSelect>
+                <TextField
+                  label="Date From"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  style={{ marginBottom: '20px', width: '100%' }}
+                />
+                <TextField
+                  label="Date To"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  style={{ marginBottom: '20px', width: '100%' }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+                <Button onClick={handleFilterApply}>Apply</Button>
+              </DialogActions>
+            </Dialog>
 
+          </div>
+          <div className="flex items-center space-x-2 " style={{ marginBottom: 20 }}>
+            <Input aria-label="Demo input" onChange={(e) => handleSearchTermChange(e.target.value)} placeholder="Tapez quelque chose…" />
+          </div>
+          <div className="flex space-x-2">
+      
+            <Button variant="contained" color="primary" onClick={exportToXLSX}>
+              Export XLSX
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center space-x-2 " style={{marginBottom:20}}>
-          <Input aria-label="Demo input"onChange={(e)=>handleSearchTermChange(e.target.value)}  placeholder="Tapez quelque chose…" />
-         </div>
-      </div>
 
-
-
-      <ErrorBoundary>
-        <GridComponent
-          id="gridcomp"
-          dataSource={filteredData || []} // Ensure dataSource is an array
-          allowPaging
-          allowSorting
-          toolbar={['Search']}
-          width='auto'
-          keyExtractor={(item, index) => item.NOM} // Ensure unique keys for rows
-        >
-          <ColumnsDirective>
-            {ordersGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Search, Filter, Page, ExcelExport, Edit, PdfExport]} />
-        </GridComponent>
-   
-      </ErrorBoundary>
+        <ErrorBoundary>
+          <GridComponent
+            id="gridcomp"
+            dataSource={filteredData || []} // Ensure dataSource is an array
+            allowPaging
+            allowSorting
+            toolbar={['Search']}
+            width='auto'
+            keyExtractor={(item, index) => item.NOM} // Ensure unique keys for rows
+          >
+            <ColumnsDirective>
+              {ordersGrid.map((item, index) => (
+                <ColumnDirective key={index} {...item} />
+              ))}
+            </ColumnsDirective>
+            <Inject services={[Resize, Sort, ContextMenu, Search, Filter, Page, ExcelExport, Edit, PdfExport]} />
+          </GridComponent>
+        </ErrorBoundary>
       </Container>
     </div>
   );
