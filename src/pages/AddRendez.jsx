@@ -48,7 +48,7 @@ const AddRendez = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault()
-      // await addRendezVous(formData)
+      await addRendezVous(formData)
       navigate('/');
     } catch (error) {
       console.error('Error: Server Error');

@@ -1,74 +1,59 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Container, Typography, TextField } from '@mui/material';
-import SectionOne from '../AddRDV/SectionOne';
-import SectionTwo from '../AddRDV/SectionTwo';
-import SectionThree from '../AddRDV/SectionThree';
-import { useRendezVous } from '../../contexts/RendezVousContext';
+import React from 'react';
+import { TextField, Typography, Grid, Box } from '@mui/material';
 
-
-const AddRendez = () => {
-  const navigate = useNavigate();
-  const { addRendezVous } = useRendezVous();
-
-  const [formData, setFormData] = useState({
-    status: 'injecte',
-    COMMENTAIRES: '',
-    NOM: '',
-    PRENOM: '',
-    MOBILE: '',
-    ADRESSE_COMPLETE: '',
-    MAIL: '',
-    REF_PRODUIT: '',
-    SURFACE_HABITABLE: '',
-    THERMOSTAT: false,
-    TETE_THERMOSTATIQUE: false,
-    INSTALLATEUR: '',
-    SOURCE: '',
-    PRIME: '',
-    RETOUR_INSTALLATEUR: '',
-    DATE_VISITE: null,
-    DATE_PRIS_RDV: null,
-    createdRv: null
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    // Ensure `value` is never null
-    const updatedValue = type === 'checkbox' ? checked : (value === null ? '' : value);
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: updatedValue
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      console.log(formData);
-      await addRendezVous(formData);
-      navigate('/');
-    } catch (error) {
-      console.error('Error: Server Error');
-    }
-  };
-
+const SectionOne = ({ formState, handleChange }) => {
   return (
-    <Container className="p-4">
-      <Typography variant="h4" className="mb-4">
-        Ajouter Un Rendez-vous
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <SectionOne formState={formData} handleChange={handleChange} />
-        <SectionTwo formState={formData} handleChange={handleChange} />
-        <SectionThree formState={formData} handleChange={handleChange} />
-        <Button type="submit" variant="contained" color="primary" className="mt-4">
-          Ajouter
-        </Button>
-      </form>
-    </Container>
+    <Box className="mb-4 mt-4">
+      <Typography variant="h6" className="mb-2">Personal Information</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Nom"
+            name="NOM"
+            value={formState.NOM}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Prenom"
+            name="PRENOM"
+            value={formState.PRENOM}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Mobile"
+            name="MOBILE"
+            value={formState.MOBILE}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Adresse Complete"
+            name="ADRESSE_COMPLETE"
+            value={formState.ADRESSE_COMPLETE}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Email"
+            name="MAIL"
+            value={formState.MAIL}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
-export default AddRendez;
+export default SectionOne;
