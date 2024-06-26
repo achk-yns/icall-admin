@@ -22,21 +22,18 @@ const Navbar = () => {
     <div className="flex justify-between p-2  relative bg-gray-800 text-white">
       {/* Logo and Title */}
       <div>
-        <h1 className="text-lg font-bold">IcallManager<sub>{user.isAdmin ? "admin" : "agent"}</sub></h1>
+        <h1 className="text-lg font-bold">IcallManager<sub>{user.ROLE}</sub></h1>
         
       </div>
 
-      {/* Navigation Links */}
       <div className="flex items-center space-x-4">
-        <Link to="/Rendez-vous" className="hover:text-gray-300">
-          RDVs
-        </Link>
-        {user.isAdmin && (
-          <Link to="/Utilisateurs" className="hover:text-gray-300">
-            Utilisateurs
-          </Link>
+        <h1><Link to="/Rendez-vous" className="hover:text-gray-300"> RDVs </Link></h1>
+        {(user.ROLE === "admin" || user.ROLE === "superviseur") && (
+
+          <h1><Link to="/Utilisateurs" className="hover:text-gray-300"> Utilisateurs </Link></h1>
         )}
       </div>
+
 
       {/* User Profile */}
       <div className="flex items-center">

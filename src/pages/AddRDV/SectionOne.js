@@ -10,7 +10,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Nom"
             name="NOM"
-            value={formState.NOM}
+            value={formState.NOM || ""}
             onChange={handleChange}
             fullWidth
           />
@@ -19,7 +19,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Prenom"
             name="PRENOM"
-            value={formState.PRENOM}
+            value={formState.PRENOM || ""}
             onChange={handleChange}
             fullWidth
           />
@@ -28,7 +28,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Mobile"
             name="MOBILE"
-            value={formState.MOBILE}
+            value={formState.MOBILE || null }
             onChange={handleChange}
             fullWidth
           />
@@ -37,7 +37,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Adresse Complete"
             name="ADRESSE_COMPLETE"
-            value={formState.ADRESSE_COMPLETE}
+            value={formState.ADRESSE_COMPLETE || ""}
             onChange={handleChange}
             fullWidth
           />
@@ -46,7 +46,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Email"
             name="MAIL"
-            value={formState.MAIL}
+            value={formState.MAIL || null }
             onChange={handleChange}
             fullWidth
           />

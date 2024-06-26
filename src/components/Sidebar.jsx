@@ -21,7 +21,7 @@ const Sidebar = () => {
           icon: <IoMdContacts />,
         },
         // Only show this link if the user is an admin
-        user.isAdmin && {
+        user.ROLE && {
           name: 'Utilisateurs',
           path: '/Utilisateurs',
           icon: <RiContactsLine />,

@@ -10,7 +10,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <TextField
             label="Ref Produit"
             name="REF_PRODUIT"
-            value={formState.REF_PRODUIT}
+            value={formState.REF_PRODUIT || null}
             onChange={handleChange}
             fullWidth
           />
@@ -19,7 +19,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <TextField
             label="Surface Habitable"
             name="SURFACE_HABITABLE"
-            value={formState.SURFACE_HABITABLE}
+            value={formState.SURFACE_HABITABLE ||null}
             onChange={handleChange}
             fullWidth
           />
@@ -28,7 +28,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={formState.THERMOSTAT}
+                checked={formState.THERMOSTAT || false}
                 onChange={handleChange}
                 name="THERMOSTAT"
               />
@@ -40,7 +40,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={formState.TETE_THERMOSTATIQUE}
+                checked={formState.TETE_THERMOSTATIQUE || false}
                 onChange={handleChange}
                 name="TETE_THERMOSTATIQUE"
               />

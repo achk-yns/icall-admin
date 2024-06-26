@@ -22,12 +22,12 @@ const FetchRend = {
     }
   },
 
-  getONERendezVous: async (nom) => {
+  getONERendezVous : async (nom, token) => {
     try {
       const response = await fetch(`${API_BASE_URL}rendez-vous/${nom}`, {
         headers: {
           'Content-Type': 'application/json',
-          'token': Token
+          'token': token // Use token argument
         }
       });
       if (!response.ok) {
@@ -36,11 +36,11 @@ const FetchRend = {
       const { data } = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching one rendezvous:", error);
+      console.error("Error fetching one rendezvous:", error.message); // Corrected typo
       throw error;
     }
   },
-
+  
   addRendezVous: async (rendezVousData) => {
     try {
       const response = await fetch(`${API_BASE_URL}rendez-vous`, {

@@ -68,8 +68,8 @@ const schema = mongoose.model("RendezVous", {
         required: false
     },
     INSTALLATEUR: {
-        type: String,
-        required: false
+         type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     SOURCE: {
         type: String,

@@ -6,9 +6,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRendezVous } from '../contexts/RendezVousContext';
 import FetchRend from '../Fetching/FetchRend';
 import { Button, Container, Typography } from '@mui/material';
+import { useAuth } from '../contexts/authContext';
 export default function EditeRDV() {
   const { NOM } = useParams();
+  const {token}=useAuth()
   const navigate = useNavigate();
+  
   const {updateRendezVous} = useRendezVous()
   const [formData, setFormData] = useState({
     status: 'injecte',
@@ -33,11 +36,11 @@ export default function EditeRDV() {
   
   useEffect(()=>{
     const FetchOne =async()=>{
-      const data = FetchRend.getONERendezVous(NOM)
+      const data =await FetchRend.getONERendezVous(NOM,token)
       setFormData(data)
     };
     FetchOne();
-  },[])
+  },[NOM,token])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,7 +52,8 @@ export default function EditeRDV() {
 
   const handleSubmit =async (e)=>{
     e.preventDefault()
-    const data = await updateRendezVous(NOM,formData);
+    await updateRendezVous(NOM,formData);
+
     navigate("/")
   }
   return (

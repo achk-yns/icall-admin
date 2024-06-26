@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const schema = mongoose.model("User" , {
+const schema = mongoose.model("User", {
     NOM: {
         type: String,
         required: true
@@ -12,19 +12,24 @@ const schema = mongoose.model("User" , {
     EMAIL: {
         type: String,
         required: true,
-        unique: true, 
-        trim: true,   
-        lowercase: true 
+        unique: true,
+        trim: true,
+        lowercase: true
     },
     PASSWORD: {
         type: String,
         required: true,
-        minlength: 8,  
+        minlength: 8,
     },
-    isAdmin : {
-        type:Boolean,
-        default:false,
+    ROLE: {
+        type: String,
+        enum: ['admin', 'agent', 'superviseur', 'installeur'],
+        default: 'agent' 
+    },
+    SUPERVISEUR: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User' 
     }
-})
+});
 
-module.exports = schema
+module.exports = schema;

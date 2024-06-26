@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject, Search } from '@syncfusion/ej2-react-grids';
-import { styled, useTheme } from '@mui/system';
+import { styled } from '@mui/system';
 import { Header } from '../components';
-import { MenuItem, Select, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, useMediaQuery, Container, Input } from '@mui/material';
+import { MenuItem, Select, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Container, Input } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRendezVous } from '../contexts/RendezVousContext';
@@ -12,7 +12,8 @@ import { useAuth } from '../contexts/authContext';
 import { FaFilter } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { MdOutlineEditCalendar } from "react-icons/md";
-const CustomSelect = styled(Select)(({ theme }) => ({
+
+const CustomSelect = styled(Select)(() => ({
   '& .MuiSelect-root': {
     backgroundColor: 'white',
     borderRadius: '10px',
@@ -48,8 +49,7 @@ const Orders = () => {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -221,7 +221,7 @@ const Orders = () => {
         <p style={{ fontSize: "16px" }}>{formatDate(props.createdRv)}</p>
       ),
     },
-    user.isAdmin ? {
+    user.ROLE === "admin"? {
       headerText: 'Actions',
       width: '100',
       textAlign: 'Center',

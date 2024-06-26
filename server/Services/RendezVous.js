@@ -1,7 +1,7 @@
 const express  = require("express")
 const route = express.Router()
 const RendezVous = require("../Models/RendezVous")
-const localStorage = require('localStorage');
+
 const authMiddleware = require("../middlewares/AuthMiddleware")
 const User = require('../Models/User'); 
 
@@ -28,20 +28,25 @@ route.post('/',authMiddleware,async function(req, res){
 
 route.get('/', authMiddleware, async (req, res) => {
     try {
-        const user_id = req.userId;
+        const userid = req.userId;
         let AllData = [];
-        
-        if (req.isAdmin) {
+        if (req.ROLE === "admin") {
             AllData = await RendezVous.find({}).populate('user_id', 'NOM PRENOM EMAIL');
-        } else {
-            AllData = await RendezVous.find({ user_id }).populate('user_id', 'NOM PRENOM EMAIL');
+        }else if (req.ROLE === "superviseur") {
+            const users = await User.find({ SUPERVISEUR: req.userId });
+            const userIds = users.map(user => user._id);
+            console.log(userIds) 
+            AllData = await RendezVous.find({ user_id: { $in: userIds } }).populate('user_id', 'NOM PRENOM EMAIL');
+        } else if (req.ROLE === "installeur"){
+            AllData = await RendezVous.find({INSTALLATEUR:req.userId}).populate('user_id', 'NOM PRENOM EMAIL');
+        }else{
+            AllData = await RendezVous.find({ user_id:userid }).populate('user_id', 'NOM PRENOM EMAIL');
         }
         
         if (AllData && AllData.length > 0) {
-            console.log("Data found, sending response");
+           
             res.status(200).send({ data: AllData });
         } else {
-            console.log("No data found, sending response with message");
             res.status(200).send({ data: [], message: "Aucun Rendez Vous" });
         }
     } catch (error) {
@@ -50,31 +55,53 @@ route.get('/', authMiddleware, async (req, res) => {
     }
 });
 
-route.get('/:NOM',authMiddleware,async (req,res) => {
-    const {NOM} = req.params 
-    const user_id = req.userId  
-    const FindRendezvous =await RendezVous.findOne({NOM,user_id});
-    if(FindRendezvous){
-        res.status(200).send({data: FindRendezvous})
+route.get('/:NOM', authMiddleware, async (req, res) => {
+    try {
+      const { NOM } = req.params;
+      const user_id = req.userId;
+      let FindRendezvous;
+  
+      if (req.ROLE === "admin") {
+        FindRendezvous = await RendezVous.findOne({ NOM });
+      } else {
+        FindRendezvous = await RendezVous.findOne({ NOM, user_id });
+      }
+  
+      if (!FindRendezvous) {
+        return res.status(401).send({ message: "Aucun Rendez Vous avec ce nom" });
+      }
+  
+      return res.status(200).send({ data: FindRendezvous });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: "An error occurred" });
     }
-    else{
-        res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
-    }
-})
-
+  });
+  
 route.put("/:NOM/edit" , authMiddleware , async (req,res)=>{
+
     try {
         const {NOM} = req.params 
-    const user_id = req.userId
-    if(req.body){
-        const FindRendezvous =await RendezVous.findOneAndUpdate({NOM , user_id },req.body,{new:true});
-        if(FindRendezvous){
-            res.status(200).send({data: FindRendezvous})
+        const user_id = req.userId
+        if(req.ROLE === "admin"){
+            if(req.body){
+                const FindRendezvous =await RendezVous.findOneAndUpdate({NOM},req.body,{new:true});
+                if(FindRendezvous){
+                    res.status(200).send({data: FindRendezvous})
+                }
+                else{
+                    res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
+                }
+            } 
+        }else if(req.ROLE === "superviseur"){
+                const FindRendezvous =await RendezVous.findOneAndUpdate({NOM , superviseur:user_id },req.body,{new:true});
+                if(FindRendezvous){
+                    res.status(200).send({data: FindRendezvous})
+                }
+                else{
+                    res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
+                }
         }
-        else{
-            res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
-        }
-    } 
     } catch (error) {
         res.status(500).send({message: "serveur error"} )
     }
@@ -85,37 +112,42 @@ route.put("/:NOM/edit/status" , authMiddleware , async (req,res)=>{
     try {
         const { NOM } = req.params;
         const user_id = req.userId;
-        if (req.body) {
-            const FindRendezvous = await RendezVous.findOneAndUpdate(
-                { NOM, user_id },
-                req.body,
-                { new: true }
-            );
-            if (FindRendezvous) {
-                const allRendezVous = await RendezVous.find({ user_id });
-                res.status(200).send({ data: allRendezVous });
-            } else {
-                res.status(401).send({ message: "Aucun Rendez Vous avec ce nom" });
-            }
-        } 
-    } catch (error) {
-        res.status(500).send({ message: "Serveur error" });
-    }
+        if(req.ROLE ==="admin"){
+            if (req.body) {
+                const FindRendezvous = await RendezVous.findOneAndUpdate(
+                    { NOM },
+                    req.body,
+                    { new: true }
+                );
+                if(!FindRendezvous){
+                    res.status(401).send({ message: "Aucun Rendez Vous avec ce nom" });
+                }
+            } 
+        }
+        } catch (error) {
+            res.status(500).send({ message: "Serveur error" });
+        }
+        }
+            
     
     
-})
+)
 
 
 route.delete('/:NOM' , authMiddleware , async (req,res) => {
-    const {NOM} = req.params 
-    const user_id = req.userId
-    const FindRendezvous =await RendezVous.findOne({NOM,user_id});
-    if(FindRendezvous){
-        const FindRendezvous =await RendezVous.findOneAndDelete({NOM});
-        res.status(200).send({message  : "REMOVE RENDEZ-VOUS",data: FindRendezvous})
-    }
-    else{
-        res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
+    if(req.ROLE==="admin"){
+        const {NOM} = req.params 
+        const user_id = req.userId
+        const FindRendezvous =await RendezVous.findOne({NOM,user_id});
+        if(FindRendezvous){
+            const FindRendezvous =await RendezVous.findOneAndDelete({NOM});
+            res.status(200).send({message  : "REMOVE RENDEZ-VOUS",data: FindRendezvous})
+        }
+        else{
+            res.status(401).send({message: " Aucun Rendez Vous avec ce nom "} )
+        }
+    }else{
+        res.status(401).send({message: "Not allowed to delete  "} )
     }
 })
 

@@ -1,25 +1,36 @@
 import React from 'react';
-import { TextField, Typography, Grid, Box } from '@mui/material';
+import { TextField, Typography, Grid, Box, Select, InputLabel, MenuItem } from '@mui/material';
+import { useAuth } from '../../contexts/authContext';
 
 const SectionThree = ({ formState, handleChange }) => {
+  const {installateurs} = useAuth()
+  
   return (
     <Box className="mb-4 mt-4">
       <Typography variant="h6" className="mb-2">Additional Information</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Installateur"
-            name="INSTALLATEUR"
-            value={formState.INSTALLATEUR}
-            onChange={handleChange}
-            fullWidth
-          />
+        <InputLabel id="role-select-label">Installateur : </InputLabel>
+            <Select
+            labelId="role-select-label"
+                name="INSTALLATEUR"
+              value={formState.INSTALLATEUR  || " "}
+              onChange={handleChange}
+              label="INSTALLATEUR"
+              fullWidth
+            >
+              {installateurs.map((installer,index) => (
+                <MenuItem key={index} value={installer._id}>
+                  {installer.NOM} {installer.PRENOM}
+                </MenuItem>
+              ))}
+            </Select>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             label="Source"
             name="SOURCE"
-            value={formState.SOURCE}
+            value={formState.SOURCE||""}
             onChange={handleChange}
             fullWidth
           />
@@ -28,7 +39,7 @@ const SectionThree = ({ formState, handleChange }) => {
           <TextField
             label="Prime"
             name="PRIME"
-            value={formState.PRIME}
+            value={formState.PRIME ||""}
             onChange={handleChange}
             fullWidth
           />
@@ -37,7 +48,7 @@ const SectionThree = ({ formState, handleChange }) => {
           <TextField
             label="Retour Installateur"
             name="RETOUR_INSTALLATEUR"
-            value={formState.RETOUR_INSTALLATEUR}
+            value={formState.RETOUR_INSTALLATEUR || null}
             onChange={handleChange}
             fullWidth
           />
@@ -47,7 +58,7 @@ const SectionThree = ({ formState, handleChange }) => {
             label="Date Visite"
             name="DATE_VISITE"
             type="date"
-            value={formState.DATE_VISITE}
+            value={formState.DATE_VISITE||null}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
@@ -60,7 +71,7 @@ const SectionThree = ({ formState, handleChange }) => {
             label="Date Pris RDV"
             name="DATE_PRIS_RDV"
             type="date"
-            value={formState.DATE_PRIS_RDV}
+            value={formState.DATE_PRIS_RDV||null}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
@@ -85,7 +96,7 @@ const SectionThree = ({ formState, handleChange }) => {
           <TextField
             label="Commentaires"
             name="COMMENTAIRES"
-            value={formState.COMMENTAIRES}
+            value={formState.COMMENTAIRES || ""}
             onChange={handleChange}
             multiline
             rows={4}

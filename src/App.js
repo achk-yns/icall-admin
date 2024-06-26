@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { FiSettings } from 'react-icons/fi';
-import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import 'react-toastify/dist/ReactToastify.css';
-import { Navbar, Sidebar } from './components';
-import { Home, Orders, Employees ,Login ,Registration,DetailRend , AjouterRend, ModifierRend } from './pages';
+import { Navbar } from './components';
+import { Orders, Employees, CreateUser,Login, DetailRend, AjouterRend, ModifierRend } from './pages';
 import './App.css';
-import { AuthProvider, useAuth } from './contexts/authContext'; // Adjust path as needed
-import { useStateContext } from './contexts/ContextProvider';
+import { AuthProvider, useAuth } from './contexts/authContext';
 import { RendezVousProvider } from './contexts/RendezVousContext';
 
-
 const App = () => {
-  useEffect(()=>{
+  useEffect(() => {
     console.log(process.env.REACT_APP_API_URL);
+  }, []);
 
-  },[])
   return (
     <AuthProvider>
       <RendezVousProvider>
@@ -28,15 +24,14 @@ const App = () => {
 };
 
 const AppContent = () => {
-  const { user, loading, token ,setLoading} = useAuth();
-  const { activeMenu } = useStateContext();
+  const { user, loading, token, setLoading } = useAuth();
 
   useEffect(() => {
     console.log(token, user);
-    if(!token){
+    if (!token) {
       setLoading(false);
     }
-  }, [token, user]);
+  }, [token, user, setLoading]);
 
   if (loading) {
     return (
@@ -51,25 +46,51 @@ const AppContent = () => {
       <div className='dark:bg-main-dark-bg'>
         {user && token ? (
           <>
-              <div className='fixed md:static bg-main-bg dark:bg-main-dark-bg '>
-                <Navbar />
-              </div>
-              <div style={{marginBottom:20}}>
-                <Routes>
-                  <Route path='/Rendez-Vous' element={<Orders />} />
-                  <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                  <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                  <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
-                  <Route path='/Utilisateurs' element={<Employees />} />
-                  <Route path='*' element={<Navigate to='/Rendez-vous' />} />
-                </Routes>
-              </div>
+            <div className='fixed md:static bg-main-bg dark:bg-main-dark-bg'>
+              <Navbar />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <Routes>
+                {user.ROLE === 'admin' && (
+                  <>
+                    <Route path='/Rendez-Vous' element={<Orders />} />
+                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                    <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                    <Route path='/Utilisateurs' element={<Employees />} />
+                    <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
+                  </>
+                )}
+                {user.ROLE === 'agent' && (
+                  <>
+                    <Route path='/Rendez-Vous' element={<Orders />} />
+                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                  </>
+                )}
+                {user.ROLE === 'superviseur' && (
+                  <>
+                    <Route path='/Rendez-Vous' element={<Orders />} />
+                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                    <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                    <Route path='/Utilisateurs' element={<Employees />} />
+                    <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
+                  </>
+                )}
+                {user.ROLE === 'installeur' && (
+                  <>
+                    <Route path='/Rendez-Vous' element={<Orders />} />
+                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                  </>
+                )}
+                <Route path='*' element={<Navigate to='/Rendez-Vous' />} />
+              </Routes>
+            </div>
           </>
         ) : (
           <div className='w-full min-h-screen flex items-center justify-center dark:bg-main-dark-bg bg-main-bg'>
             <Routes>
               <Route path='/login' element={<Login />} />
-              <Route path='/register' element={<Registration />} />
               <Route path='*' element={<Navigate to='/login' />} />
             </Routes>
           </div>
