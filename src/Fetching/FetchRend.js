@@ -4,18 +4,20 @@ const Token = localStorage.getItem('token');
 const FetchRend = {
   getRendezVous: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}rendez-vous`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'token': Token
+      if(Token){
+        const response = await fetch(`${API_BASE_URL}rendez-vous`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'token': Token
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const { data } = await response.json();
+        console.log("data Fetched....." , data);
+        return data;
       }
-      const { data } = await response.json();
-      console.log("data Fetched....." , data);
-      return data;
     } catch (error) {
       console.error("Error fetching rendezvous:", error);
       throw error;

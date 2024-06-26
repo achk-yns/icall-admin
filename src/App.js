@@ -4,14 +4,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from './components';
-import { Orders, Employees, CreateUser,Login, DetailRend, AjouterRend, ModifierRend } from './pages';
+import { Orders, Employees, CreateUser, Login, DetailRend, AjouterRend, ModifierRend } from './pages';
 import './App.css';
 import { AuthProvider, useAuth } from './contexts/authContext';
 import { RendezVousProvider } from './contexts/RendezVousContext';
 
 const App = () => {
   useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL);
+    console.log(process.env.REACT_APP_API_URL); // Ensure API URL is logged correctly
   }, []);
 
   return (
@@ -24,14 +24,9 @@ const App = () => {
 };
 
 const AppContent = () => {
-  const { user, loading, token, setLoading } = useAuth();
+  const { user, loading, token } = useAuth();
 
-  useEffect(() => {
-    console.log(token, user);
-    if (!token) {
-      setLoading(false);
-    }
-  }, [token, user, setLoading]);
+  // Optional: You can handle setLoading if needed, based on useAuth implementation
 
   if (loading) {
     return (

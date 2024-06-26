@@ -28,20 +28,22 @@ export const RendezVousProvider = ({ children }) => {
  
 
   useEffect(() => {
-    const fetchRendezVous = async () => {
-      try {
-        const data = await FetchRend.getRendezVous();
-        setCounterRDV(data.length);
-        setCountCurrentMonthRendes(data.filter(order => isCurrentMonth(order.createdRv)).length);
-        setCountRDVInstalle(data.filter(order => order.STATUT==="installe" ).length);
-        setCountCurrentMonthRDVInstalle(data.filter(order => isCurrentMonth(order.createdRv) && order.STATUT==="installe" ).length);
-        setRendes(data);
-      } catch (error) {
-        console.error('Error fetching Rendez Vous:', error);
-        
-      }
-    };
-    fetchRendezVous();
+    if(token){
+      const fetchRendezVous = async () => {
+        try {
+          const data = await FetchRend.getRendezVous();
+          setCounterRDV(data.length);
+          setCountCurrentMonthRendes(data.filter(order => isCurrentMonth(order.createdRv)).length);
+          setCountRDVInstalle(data.filter(order => order.STATUT==="installe" ).length);
+          setCountCurrentMonthRDVInstalle(data.filter(order => isCurrentMonth(order.createdRv) && order.STATUT==="installe" ).length);
+          setRendes(data);
+        } catch (error) {
+          console.error('Error fetching Rendez Vous:', error);
+          
+        }
+      };
+      fetchRendezVous();
+    }
   }, []);
 
   // Function to add a new Rendez Vous

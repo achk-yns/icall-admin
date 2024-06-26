@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return true; // Set loading state after login
       } else {
-        throw new Error('Login failed');
+        return response;
       }
     } catch (error) {
       console.error('Login error:', error.message);

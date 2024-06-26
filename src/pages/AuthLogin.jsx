@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,12 +17,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-// Third-party libraries
-import * as Yup from 'yup';
-
 // Icons
-import EyeOutlined from '@ant-design/icons/EyeOutlined';
-import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 // Context
 import { AuthContext } from '../contexts/authContext'; // Adjust path if necessary
@@ -35,11 +31,13 @@ const AuthLogin = ({ isDemo = false }) => {
   const [errors, setErrors] = useState({});
   const { login } = useContext(AuthContext); // Using AuthContext for authentication operations
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   // Function to show error toast message
   const showErrorToast = (message) => {
+    console.log('Showing error toast:', message); // Debugging line
     toast.error(message, {
-      position: toast.POSITION.TOP_CENTER,
+      position: "top-center",
     });
   };
 
@@ -55,49 +53,54 @@ const AuthLogin = ({ isDemo = false }) => {
   // Form submission handling
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Validation schema using Yup
-    const validationSchema = Yup.object().shape({
-      email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-      password: Yup.string().max(255).required('Password is required'),
-    });
-
+  
+    // Simple validation
+    if (!email) {
+      setErrors((prev) => ({ ...prev, email: 'Email is required' }));
+      showErrorToast('Email is required');
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, email: null }));
+    }
+  
+    if (!password) {
+      setErrors((prev) => ({ ...prev, password: 'Password is required' }));
+      showErrorToast('Password is required');
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, password: null }));
+    }
+  
     try {
-      await validationSchema.validate({ email, password }, { abortEarly: false });
-
       // Set loading state
       setLoading(true);
-
-      const result = await login(email, password);
+  
+      const response = await login(email, password);
       
       setLoading(false);
-
-      if (result) {
-        navigate("/")
-        window.location.reload(); // You may replace this with proper navigation logic
+  
+      if (response.ok) {
+        navigate("/"); // Navigate to the home page or any desired route
       } else {
-        // Display error toast if login failed
-        showErrorToast(result.message);
+        const errorData = await response.json();
+        console.log('Login error response:', errorData);
+        showErrorToast(errorData.message || 'An error occurred');
       }
     } catch (err) {
-      // Handle validation errors or other errors
-      if (err.name === 'ValidationError') {
-        // Handle validation errors
-        const validationErrors = {};
-        err.inner.forEach((error) => {
-          validationErrors[error.path] = error.message;
-        });
-        setErrors(validationErrors);
-      } else {
-        // Handle other errors (e.g., network error)
-        console.error('Login error:', err.message);
-        showErrorToast(err.message);
-      }
-
-      // Reset loading state
+      console.log('Login error:', err.message);
+      showErrorToast(err.message);
       setLoading(false);
     }
   };
+  
+  // Test toast on component mount
+  const testToast = () => {
+    toast.success('Test toast is working!');
+  };
+
+  useEffect(() => {
+    testToast();
+  }, []);
 
   return (
     <>
@@ -113,12 +116,10 @@ const AuthLogin = ({ isDemo = false }) => {
                 value={email}
                 name="email"
                 onBlur={() => {
-                  const validationSchema = Yup.string().email('Must be a valid email').max(255).required('Email is required');
-                  try {
-                    validationSchema.validateSync(email);
+                  if (!email) {
+                    setErrors((prev) => ({ ...prev, email: 'Email is required' }));
+                  } else {
                     setErrors((prev) => ({ ...prev, email: null }));
-                  } catch (err) {
-                    setErrors((prev) => ({ ...prev, email: err.message }));
                   }
                 }}
                 onChange={(e) => setEmail(e.target.value)}
@@ -142,12 +143,10 @@ const AuthLogin = ({ isDemo = false }) => {
                 value={password}
                 name="password"
                 onBlur={() => {
-                  const validationSchema = Yup.string().max(255).required('Password is required');
-                  try {
-                    validationSchema.validateSync(password);
+                  if (!password) {
+                    setErrors((prev) => ({ ...prev, password: 'Password is required' }));
+                  } else {
                     setErrors((prev) => ({ ...prev, password: null }));
-                  } catch (err) {
-                    setErrors((prev) => ({ ...prev, password: err.message }));
                   }
                 }}
                 onChange={(e) => setPassword(e.target.value)}
@@ -186,7 +185,7 @@ const AuthLogin = ({ isDemo = false }) => {
                 }
                 label={<Typography variant="h6">Keep me signed in</Typography>}
               />
-              <Link variant="h6" component={RouterLink} color="text.primary">
+              <Link variant="h6" component={RouterLink} color="text.primary" to="/forgot-password">
                 Forgot Password?
               </Link>
             </Stack>
