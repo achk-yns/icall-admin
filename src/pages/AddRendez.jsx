@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { Button, Container, Typography } from '@mui/material';
 import SectionOne from './AddRDV/SectionOne';
@@ -47,7 +42,6 @@ const AddRendez = () => {
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
       await addRendezVous(formData)
       navigate('/');
     } catch (error) {

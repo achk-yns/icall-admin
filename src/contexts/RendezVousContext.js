@@ -26,6 +26,7 @@ export const RendezVousProvider = ({ children }) => {
   const [countRDVInstalle,setCountRDVInstalle] = useState(0);
   const [countCurrentMonthRDVInstalle,setCountCurrentMonthRDVInstalle] = useState(0);
  
+
   useEffect(() => {
     const fetchRendezVous = async () => {
       try {
@@ -37,7 +38,7 @@ export const RendezVousProvider = ({ children }) => {
         setRendes(data);
       } catch (error) {
         console.error('Error fetching Rendez Vous:', error);
-        // Handle error as needed
+        
       }
     };
     fetchRendezVous();
@@ -50,7 +51,7 @@ export const RendezVousProvider = ({ children }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Use Bearer token if applicable
+          token: `${token}`, // Use Bearer token if applicable
         },
         body: JSON.stringify(formData),
       });
@@ -64,6 +65,16 @@ export const RendezVousProvider = ({ children }) => {
       // Handle error as needed
     }
   };
+
+  const updateRendezVous = async (nom,updateData)=>{
+    try {
+       const updating = await FetchRend.updateRendezVous(nom,updateData)
+       const data = await FetchRend.getRendezVous();
+       setRendes(data)
+    } catch (error) {
+      console.error('Error updating Rendez Vous status:', error);
+    }
+  }
 
   // Function to update status of a Rendez Vous
   const updateRendezVousStatus = async (nom, newStatus) => {
@@ -112,6 +123,7 @@ export const RendezVousProvider = ({ children }) => {
     rendes: searchTerm ? searchResults : rendes, 
     addRendezVous,
     updateRendezVousStatus,
+    updateRendezVous,
     deleteRendezVous,
     CountRendes,
     countCurrentMonthRendes,

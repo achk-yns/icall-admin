@@ -3,7 +3,7 @@ import { TextField, Typography, Grid, Box } from '@mui/material';
 
 const SectionOne = ({ formState, handleChange }) => {
   return (
-    <Box className="mb-4 mt-4">
+    <Box className="mb-4">
       <Typography variant="h6" className="mb-2">Personal Information</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>

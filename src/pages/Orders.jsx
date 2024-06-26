@@ -11,7 +11,7 @@ import { LuCalendarClock } from "react-icons/lu";
 import { useAuth } from '../contexts/authContext';
 import { FaFilter } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-
+import { MdOutlineEditCalendar } from "react-icons/md";
 const CustomSelect = styled(Select)(({ theme }) => ({
   '& .MuiSelect-root': {
     backgroundColor: 'white',
@@ -63,6 +63,15 @@ const Orders = () => {
     if (rowData && rowData.NOM) {
       const { NOM } = rowData;
       navigate(`/Rendez-Vous/${NOM}`);
+    } else {
+      console.error('Invalid rowData:', rowData);
+    }
+  };
+
+  const handleRowClickEdite = (rowData) => {
+    if (rowData && rowData.NOM) {
+      const { NOM } = rowData;
+      navigate(`/Rendez-Vous/${NOM}/edit`);
     } else {
       console.error('Invalid rowData:', rowData);
     }
@@ -212,7 +221,7 @@ const Orders = () => {
         <p style={{ fontSize: "16px" }}>{formatDate(props.createdRv)}</p>
       ),
     },
-    user.isAdmin && {
+    user.isAdmin ? {
       headerText: 'Actions',
       width: '100',
       textAlign: 'Center',
@@ -221,10 +230,37 @@ const Orders = () => {
         <div className="flex justify-center gap-2">
           <button
             type="button"
+            onClick={() => handleRowClickEdite(props)}
+          >
+            <MdOutlineEditCalendar style={{ fontSize: '1.5rem' }} />
+          </button>
+          <button
+            type="button"
             onClick={() => handleDelete(props.NOM)}
             style={{ color: 'red' }}
           >
             <DeleteOutlined  style={{ fontSize: '1.5rem' }}/>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRowClick(props)}
+          >
+            <MdOutlineRemoveRedEye style={{ fontSize: '1.5rem' }} />
+          </button>
+        </div>
+      ),
+    }:{
+      headerText: 'Actions',
+      width: '100',
+      textAlign: 'Center',
+      headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
+      template: (props) => (
+        <div className="flex justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => handleRowClickEdite(props)}
+          >
+            <MdOutlineEditCalendar style={{ fontSize: '1.5rem' }} />
           </button>
           <button
             type="button"

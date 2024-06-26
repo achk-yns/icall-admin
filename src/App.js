@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar, Sidebar } from './components';
-import { Home, Orders, Employees ,Login ,Registration,DetailRend , AjouterRend } from './pages';
+import { Home, Orders, Employees ,Login ,Registration,DetailRend , AjouterRend, ModifierRend } from './pages';
 import './App.css';
 import { AuthProvider, useAuth } from './contexts/authContext'; // Adjust path as needed
 import { useStateContext } from './contexts/ContextProvider';
@@ -59,6 +59,7 @@ const AppContent = () => {
                   <Route path='/Rendez-Vous' element={<Orders />} />
                   <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
                   <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                  <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
                   <Route path='/Utilisateurs' element={<Employees />} />
                   <Route path='*' element={<Navigate to='/Rendez-vous' />} />
                 </Routes>
