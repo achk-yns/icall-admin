@@ -28,60 +28,66 @@ const AppContent = () => {
 
   // Optional: You can handle setLoading if needed, based on useAuth implementation
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: 'var(--main-bg)' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <BrowserRouter>
       <div className='dark:bg-main-dark-bg'>
         {user && token ? (
-          <>
-            <div className='fixed md:static bg-main-bg dark:bg-main-dark-bg'>
-              <Navbar />
-            </div>
-            <div style={{ marginBottom: 20 }}>
-              <Routes>
-                {user.ROLE === 'admin' && (
-                  <>
-                    <Route path='/Rendez-Vous' element={<Orders />} />
-                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                    <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
-                    <Route path='/Utilisateurs' element={<Employees />} />
-                    <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
-                  </>
-                )}
-                {user.ROLE === 'agent' && (
-                  <>
-                    <Route path='/Rendez-Vous' element={<Orders />} />
-                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                  </>
-                )}
-                {user.ROLE === 'superviseur' && (
-                  <>
-                    <Route path='/Rendez-Vous' element={<Orders />} />
-                    <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                    <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
-                    <Route path='/Utilisateurs' element={<Employees />} />
-                    <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
-                  </>
-                )}
-                {user.ROLE === 'installeur' && (
-                  <>
-                    <Route path='/Rendez-Vous' element={<Orders />} />
-                    <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                  </>
-                )}
-                <Route path='*' element={<Navigate to='/Rendez-Vous' />} />
-              </Routes>
-            </div>
-          </>
+          loading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                backgroundColor: 'var(--main-bg)',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <div className='fixed md:static bg-main-bg dark:bg-main-dark-bg'>
+                <Navbar />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <Routes>
+                  {user.ROLE === 'admin' && (
+                    <>
+                      <Route path='/Rendez-Vous' element={<Orders />} />
+                      <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                      <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                      <Route path='/Utilisateurs' element={<Employees />} />
+                      <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
+                    </>
+                  )}
+                  {user.ROLE === 'agent' && (
+                    <>
+                      <Route path='/Rendez-Vous' element={<Orders />} />
+                      <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                    </>
+                  )}
+                  {user.ROLE === 'superviseur' && (
+                    <>
+                      <Route path='/Rendez-Vous' element={<Orders />} />
+                      <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
+                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                      <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                      <Route path='/Utilisateurs' element={<Employees />} />
+                      <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
+                    </>
+                  )}
+                  {user.ROLE === 'installeur' && (
+                    <>
+                      <Route path='/Rendez-Vous' element={<Orders />} />
+                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                    </>
+                  )}
+                  <Route path='*' element={<Navigate to='/Rendez-Vous' />} />
+                </Routes>
+              </div>
+            </>
+          )
         ) : (
           <div className='w-full min-h-screen flex items-center justify-center dark:bg-main-dark-bg bg-main-bg'>
             <Routes>
