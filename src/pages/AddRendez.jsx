@@ -6,6 +6,7 @@ import SectionOne from './AddRDV/SectionOne';
 import SectionTwo from './AddRDV/SectionTwo';
 import SectionThree from './AddRDV/SectionThree';
 import { useRendezVous } from '../contexts/RendezVousContext';
+import ToastService from '../ToastService';
 
 const AddRendez = () => {
   const navigate = useNavigate();
@@ -34,19 +35,26 @@ const AddRendez = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
+    
+    if (name === 'MOBILE') {
+      const cleanedValue = value.replace(/\D/g, ''); // Supprime tous les caractères non numériques
+      if (cleanedValue.length <= 9) {
+        setFormData({
+          ...formData,
+          [name]: cleanedValue,
+        });
+      }
+    } else {
+      setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value
     }));
+    }
   };
 
   const handleSubmit = async (e) => {
-    try {
-      await addRendezVous(formData)
-      navigate('/');
-    } catch (error) {
-      console.error('Error: Server Error');
-    }
+      await addRendezVous(formData);
+    
   };
 
 

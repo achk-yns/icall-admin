@@ -1,10 +1,18 @@
-import React from 'react';
-import { TextField, Typography, Grid, Box } from '@mui/material';
+import React from "react";
+import {
+  TextField,
+  Typography,
+  Grid,
+  Box,
+  InputAdornment,
+} from "@mui/material";
 
 const SectionOne = ({ formState, handleChange }) => {
   return (
     <Box className="mb-4">
-      <Typography variant="h6" className="mb-2">Personal Information</Typography>
+      <Typography variant="h6" className="mb-2">
+        Personal Information
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -28,9 +36,27 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Mobile"
             name="MOBILE"
-            value={formState.MOBILE || null }
+            value={
+              formState.MOBILE
+                ? formState.MOBILE.startsWith("+33")
+                  ? formState.MOBILE.slice(3)
+                  : formState.MOBILE
+                : ""
+            }
             onChange={handleChange}
             fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">+33</InputAdornment>
+              ),
+            }}
+            onBlur={(event) => {
+              if (event.target.value === "" && formState.MOBILE) {
+                handleChange({
+                  target: { name: "MOBILE", value: "+33" + formState.MOBILE },
+                });
+              }
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -46,7 +72,7 @@ const SectionOne = ({ formState, handleChange }) => {
           <TextField
             label="Email"
             name="MAIL"
-            value={formState.MAIL || null }
+            value={formState.MAIL || ""}
             onChange={handleChange}
             fullWidth
           />

@@ -1,10 +1,10 @@
-const API_BASE_URL =process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 const Token = localStorage.getItem('token');
 
 const FetchRend = {
   getRendezVous: async () => {
     try {
-      if(Token){
+      if (Token) {
         const response = await fetch(`${API_BASE_URL}rendez-vous`, {
           headers: {
             'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ const FetchRend = {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const { data } = await response.json();
-        console.log("data Fetched....." , data);
+        console.log("Data fetched:", data);
         return data;
       }
     } catch (error) {
@@ -24,12 +24,12 @@ const FetchRend = {
     }
   },
 
-  getONERendezVous : async (nom, token) => {
+  getONERendezVous: async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}rendez-vous/${nom}`, {
+      const response = await fetch(`${API_BASE_URL}rendez-vous/${id}`, {
         headers: {
           'Content-Type': 'application/json',
-          'token': token // Use token argument
+          'token': Token // Use token argument
         }
       });
       if (!response.ok) {
@@ -42,7 +42,7 @@ const FetchRend = {
       throw error;
     }
   },
-  
+
   addRendezVous: async (rendezVousData) => {
     try {
       const response = await fetch(`${API_BASE_URL}rendez-vous`, {
@@ -64,29 +64,9 @@ const FetchRend = {
     }
   },
 
-  updateRendezVous: async (rendezVousNOM, updatedData) => {
+  updateRendezVous: async (id, updatedData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}rendez-vous/${rendezVousNOM}/edit`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json',
-          'token': Token
-        },
-        body: JSON.stringify(updatedData)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const { data } = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error updating rendezvous:", error);
-      throw error;
-    }
-  },
-  updateRendezVousStatus: async (rendezVousNOM, updatedData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}rendez-vous/${rendezVousNOM}/edit/status`, {
+      const response = await fetch(`${API_BASE_URL}rendez-vous/${id}/edit`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -105,9 +85,30 @@ const FetchRend = {
     }
   },
 
-  deleteRendezVous: async (rendezVousNOM) => {
+  updateRendezVousStatus: async (id, updatedData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}rendez-vous/${rendezVousNOM}`, {
+      const response = await fetch(`${API_BASE_URL}rendez-vous/${id}/edit/status`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+          'token': Token
+        },
+        body: JSON.stringify(updatedData)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const { data } = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error updating rendezvous status:", error);
+      throw error;
+    }
+  },
+
+  deleteRendezVous: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}rendez-vous/${id}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',

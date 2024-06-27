@@ -47,13 +47,12 @@ const AuthLogin = ({ isDemo = false }) => {
   };
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+
   };
 
   // Form submission handling
   const handleSubmit = async (event) => {
-    event.preventDefault();
-  
+
     // Simple validation
     if (!email) {
       setErrors((prev) => ({ ...prev, email: 'Email is required' }));

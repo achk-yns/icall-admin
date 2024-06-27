@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const schema = mongoose.model("RendezVous", {
+const rendezVousSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -25,7 +25,6 @@ const schema = mongoose.model("RendezVous", {
     NOM: {
         type: String,
         required: true,
-        unique: true
     },
     PRENOM: {
         type: String,
@@ -41,7 +40,9 @@ const schema = mongoose.model("RendezVous", {
     },
     MOBILE: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        match: [/^\d{9}$/, 'Le numéro de mobile doit contenir exactement 9 chiffres']
     },
     REF_PRODUIT: {
         type: String,
@@ -68,7 +69,7 @@ const schema = mongoose.model("RendezVous", {
         required: false
     },
     INSTALLATEUR: {
-         type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
     SOURCE: {
@@ -85,4 +86,12 @@ const schema = mongoose.model("RendezVous", {
     }
 });
 
-module.exports = schema;
+
+rendezVousSchema.pre('save', function (next) {
+    if (this.MOBILE && /^\d{9}$/.test(this.MOBILE)) {
+        this.MOBILE = `+33${this.MOBILE}`;
+    }
+    next();
+});
+
+module.exports = mongoose.model('RendezVous', rendezVousSchema);

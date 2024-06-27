@@ -20,17 +20,17 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-2  relative bg-gray-800 text-white">
+    <div className="flex justify-between p-2  relative bg-gray-100 text-white">
       {/* Logo and Title */}
       <div>
-      <img src={logo} className="w-10 h-0" alt="logo" /> 
+      <img src={logo} className="w-25 h-10" alt="logo" /> 
       </div>
 
       <div className="flex items-center space-x-4">
-        <h1><Link to="/Rendez-vous" className="hover:text-gray-300"> RDVs </Link></h1>
+        <h1><Link to="/Rendez-vous" className="text-black hover:text-gray-300"> RDVs </Link></h1>
         {(user.ROLE === "admin" || user.ROLE === "superviseur") && (
 
-          <h1><Link to="/Utilisateurs" className="hover:text-gray-300"> Utilisateurs </Link></h1>
+          <h1><Link to="/Utilisateurs" className="text-black hover:text-gray-300"> Utilisateurs </Link></h1>
         )}
       </div>
 

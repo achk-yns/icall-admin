@@ -74,7 +74,7 @@ const Employees = () => {
       textAlign: 'Center',
       template: (props) => (
         <div>
-          <button onClick={() => console.log(props.NOM)}>
+          <button onClick={() => console.log(props.id)}>
             <DeleteOutlined style={{ fontSize: '20px', color: 'red' }} />
           </button>
         </div>

@@ -8,6 +8,7 @@ import { Orders, Employees, CreateUser, Login, DetailRend, AjouterRend, Modifier
 import './App.css';
 import { AuthProvider, useAuth } from './contexts/authContext';
 import { RendezVousProvider } from './contexts/RendezVousContext';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   useEffect(() => {
@@ -18,6 +19,7 @@ const App = () => {
     <AuthProvider>
       <RendezVousProvider>
         <AppContent />
+        <ToastContainer />
       </RendezVousProvider>
     </AuthProvider>
   );
@@ -55,8 +57,8 @@ const AppContent = () => {
                     <>
                       <Route path='/Rendez-Vous' element={<Orders />} />
                       <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                      <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                      <Route path='/Rendez-Vous/:id' element={<DetailRend />} />
+                      <Route path='/Rendez-Vous/:id/edit' element={<ModifierRend />} />
                       <Route path='/Utilisateurs' element={<Employees />} />
                       <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
                     </>
@@ -71,8 +73,8 @@ const AppContent = () => {
                     <>
                       <Route path='/Rendez-Vous' element={<Orders />} />
                       <Route path='/Rendez-Vous/create' element={<AjouterRend />} />
-                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
-                      <Route path='/Rendez-Vous/:NOM/edit' element={<ModifierRend />} />
+                      <Route path='/Rendez-Vous/:id' element={<DetailRend />} />
+                      <Route path='/Rendez-Vous/:id/edit' element={<ModifierRend />} />
                       <Route path='/Utilisateurs' element={<Employees />} />
                       <Route path='/Utilisateurs/ajouter' element={<CreateUser />} />
                     </>
@@ -80,7 +82,7 @@ const AppContent = () => {
                   {user.ROLE === 'installeur' && (
                     <>
                       <Route path='/Rendez-Vous' element={<Orders />} />
-                      <Route path='/Rendez-Vous/:NOM' element={<DetailRend />} />
+                      <Route path='/Rendez-Vous/:id' element={<DetailRend />} />
                     </>
                   )}
                   <Route path='*' element={<Navigate to='/Rendez-Vous' />} />

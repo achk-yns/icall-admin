@@ -33,7 +33,7 @@ export default function AuthRegister() {
   };
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+
   };
 
   return (

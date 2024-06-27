@@ -4,7 +4,16 @@ import { useAuth } from '../../contexts/authContext';
 
 const SectionThree = ({ formState, handleChange }) => {
   const {installateurs} = useAuth()
-  
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <Box className="mb-4 mt-4">
       <Typography variant="h6" className="mb-2">Additional Information</Typography>
@@ -48,7 +57,7 @@ const SectionThree = ({ formState, handleChange }) => {
           <TextField
             label="Retour Installateur"
             name="RETOUR_INSTALLATEUR"
-            value={formState.RETOUR_INSTALLATEUR || null}
+            value={formatDate(formState.RETOUR_INSTALLATEUR) || ""}
             onChange={handleChange}
             fullWidth
           />
@@ -58,7 +67,7 @@ const SectionThree = ({ formState, handleChange }) => {
             label="Date Visite"
             name="DATE_VISITE"
             type="date"
-            value={formState.DATE_VISITE||null}
+            value={formatDate(formState.DATE_VISITE)||""}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
@@ -67,17 +76,17 @@ const SectionThree = ({ formState, handleChange }) => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Date Pris RDV"
-            name="DATE_PRIS_RDV"
-            type="date"
-            value={formState.DATE_PRIS_RDV||null}
-            onChange={handleChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-          />
+        <TextField
+          label="Date Pris RDV"
+          name="DATE_PRIS_RDV"
+          type="date"
+          value={formatDate(formState.DATE_PRIS_RDV) || " "}
+          onChange={handleChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          fullWidth
+        />
         </Grid>
         {/* <Grid item xs={12}>
           <TextField

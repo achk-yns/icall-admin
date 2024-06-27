@@ -33,7 +33,6 @@ export default function CreateUser() {
     }));
   };
   const handleSubmit = async (e) => {
-    e.preventDefault()
     CreateUser(formState)
     navigate('/utilisateurs');
 };

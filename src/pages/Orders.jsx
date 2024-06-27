@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { GridComponent, ColumnsDirective, ColumnDirective, Resize, Sort, ContextMenu, Filter, Page, ExcelExport, PdfExport, Edit, Inject, Search } from '@syncfusion/ej2-react-grids';
 import { styled } from '@mui/system';
 import { Header } from '../components';
@@ -7,13 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRendezVous } from '../contexts/RendezVousContext';
 import StaticComponents from '../components/StaticComponents';
-import { LuCalendarClock } from "react-icons/lu";
 import { useAuth } from '../contexts/authContext';
 import { FaFilter } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye, MdOutlineEditCalendar } from "react-icons/md";
 import { CiExport } from "react-icons/ci";
 import * as XLSX from 'xlsx';
-
 
 const CustomSelect = styled(Select)(() => ({
   '& .MuiSelect-root': {
@@ -43,7 +43,7 @@ const CustomSelect = styled(Select)(() => ({
 }));
 
 const Orders = () => {
-  const { rendes, updateRendezVousStatus, handleSearchTermChange, countRDVInstalle, countCurrentMonthRDVInstalle, countCurrentMonthRendes, CountRendes, deleteRendezVous } = useRendezVous();
+  const { rendes, DataStatics, updateRendezVousStatus, handleSearchTermChange, deleteRendezVous } = useRendezVous();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [filterOpen, setFilterOpen] = useState(false);
@@ -51,89 +51,55 @@ const Orders = () => {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+
 
   const handleRowClick = (rowData) => {
-    if (rowData && rowData.NOM) {
-      const { NOM } = rowData;
-      navigate(`/Rendez-Vous/${NOM}`);
+    if (rowData && rowData._id) {
+      const { _id } = rowData;
+      navigate(`/Rendez-Vous/${_id}`);
     } else {
       console.error('Invalid rowData:', rowData);
+      toast.error('Invalid data selected');
     }
   };
 
   const handleRowClickEdite = (rowData) => {
-    if (rowData && rowData.NOM) {
-      const { NOM } = rowData;
-      navigate(`/Rendez-Vous/${NOM}/edit`);
+    if (rowData && rowData._id) {
+      const { _id } = rowData;
+      navigate(`/Rendez-Vous/${_id}/edit`);
     } else {
       console.error('Invalid rowData:', rowData);
+      toast.error('Invalid data selected');
     }
   };
 
-  const handleStatusChange = (nom, newStatus) => {
-    updateRendezVousStatus(nom, newStatus);
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await updateRendezVousStatus(id, newStatus);
+      toast.success('Status updated successfully');
+    } catch (error) {
+      toast.error('Failed to update status');
+    }
   };
 
-  const handleDelete = (NOM) => {
-    deleteRendezVous(NOM);
+  const handleDelete = async (id) => {
+    try {
+      await deleteRendezVous(id);
+      toast.success('Rendez-vous deleted successfully');
+    } catch (error) {
+      toast.error('Failed to delete rendez-vous');
+    }
   };
 
-  const filteredData = rendes.filter(order => {
-    const statusMatch = statusFilter ? order.status === statusFilter : true;
-
+  const filteredData = Array.isArray(rendes) ? rendes.filter(order => {
+    const statusMatch = statusFilter ? order.STATUT === statusFilter : true;
     const dateMatch = (dateFrom && dateTo) ? (new Date(order.createdRv) >= new Date(dateFrom) && new Date(order.createdRv) <= new Date(dateTo)) : true;
     return statusMatch && dateMatch;
-  });
+  }) : [];
 
   const handleFilterApply = () => {
     setFilterOpen(false);
   };
-
-  const DataStatics = [
-    {
-      icon: <LuCalendarClock />,
-      amount: CountRendes,
-      Tag: "Brutes",
-      title: 'Total RDVs',
-      iconColor: 'rgb(255, 244, 229)',
-      iconBg: 'rgb(254, 201, 15)',
-      pcColor: 'green-600',
-    },
-    {
-      icon: <LuCalendarClock />,
-      amount: countCurrentMonthRendes,
-      title: 'Ce mois',
-      Tag: "Brutes",
-      iconColor: 'rgb(255, 244, 229)',
-      iconBg: 'rgb(254, 201, 15)',
-      pcColor: 'green-600',
-    },
-    {
-      icon: <LuCalendarClock />,
-      amount: countRDVInstalle,
-      title: "Total d'installs",
-      Tag: "Installs",
-      iconColor: 'rgb(255, 244, 229)',
-      iconBg: 'rgb(0, 128, 0)',
-      pcColor: 'green-600',
-    },
-    {
-      icon: <LuCalendarClock />,
-      amount: countCurrentMonthRDVInstalle,
-      title: 'Ce mois',
-      Tag: "Installs",
-      iconColor: 'rgb(255, 244, 229)',
-      iconBg: 'rgb(0, 128, 0)',
-      pcColor: 'green-600',
-    },
-  ];
 
   const ordersGrid = [
     {
@@ -198,7 +164,7 @@ const Orders = () => {
                         ? '#98fb98' : 'lightgreen',
             color: 'black',
           }}
-          onChange={(e) => handleStatusChange(props.NOM, e.target.value)}
+          onChange={(e) => handleStatusChange(props._id, e.target.value)}
         >
           <MenuItem value="passage" style={{ backgroundColor: '#ffeeba' }}>Passage</MenuItem>
           <MenuItem value="annule" style={{ backgroundColor: 'lightcoral' }}>Annulé</MenuItem>
@@ -214,12 +180,12 @@ const Orders = () => {
     },
     {
       headerText: 'Date',
-      field: 'createdRv',
+      field: 'DATE_PRIS_RDV',
       width: '150',
       textAlign: 'Center',
       headerTemplate: (props) => <h1 style={{ fontSize: '16px' }}>{props.headerText}</h1>,
       template: (props) => (
-        <p style={{ fontSize: "16px" }}>{formatDate(props.createdRv)}</p>
+        <p style={{ fontSize: "16px" }}>{props.DATE_PRIS_RDV}</p>
       ),
     },
     user.ROLE === "admin" ? {
@@ -237,7 +203,7 @@ const Orders = () => {
           </button>
           <button
             type="button"
-            onClick={() => handleDelete(props.NOM)}
+            onClick={() => handleDelete(props._id)}
             style={{ color: 'red' }}
           >
             <DeleteOutlined style={{ fontSize: '1.5rem' }} />
@@ -275,10 +241,15 @@ const Orders = () => {
   ].filter(Boolean);
 
   const exportToXLSX = () => {
-    const ws = XLSX.utils.json_to_sheet(filteredData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'RendezVous');
-    XLSX.writeFile(wb, 'rendezvous.xlsx');
+    try {
+      const ws = XLSX.utils.json_to_sheet(filteredData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'RendezVous');
+      XLSX.writeFile(wb, 'rendezvous.xlsx');
+      toast.success('Exported to XLSX successfully');
+    } catch (error) {
+      toast.error('Failed to export to XLSX');
+    }
   };
 
   return (
@@ -287,9 +258,12 @@ const Orders = () => {
       <StaticComponents Data={DataStatics} />
       <Container>
         <Header category="Page" title="Rendez-vous" Route={{ to: "create", text: "Ajouter" }} />
-        <div className='flex'>
+        <div className='flex  justify-between items-center'>
           <div >
-            <FaFilter onClick={() => setFilterOpen(true)} className='m-2' />
+            <div className='flex  items-center cursor-pointer' onClick={() => setFilterOpen(true)} >
+              <FaFilter className='m-2' />
+              <h4 className='text-bold '>Filter</h4>
+            </div>
             <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
               <DialogTitle>Filter Orders</DialogTitle>
               <DialogContent>
@@ -329,25 +303,26 @@ const Orders = () => {
                 <Button onClick={handleFilterApply}>Apply</Button>
               </DialogActions>
             </Dialog>
-
           </div>
-          <div className="flex items-center space-x-2 " style={{ marginBottom: 20 }}>
-            <Input aria-label="Demo input" onChange={(e) => handleSearchTermChange(e.target.value)} placeholder="Tapez quelque chose…" />
+          <div className="flex items-center space-x-2 mt-3 " style={{ marginBottom: 20 }}>
+            <Input aria-label="Demo input" className="w-80" onChange={(e) => handleSearchTermChange(e.target.value)} placeholder="Tapez quelque chose…" />
           </div>
-          
-          <CiExport  className={"h-8 w-8 ms-2 "}  onClick={exportToXLSX} />
-  
+          <div className='flex  items-center cursor-pointer' onClick={exportToXLSX}>
+            <CiExport className={"h-8 w-8 ms-2 "} />
+            <h4 className='text-bold '>Export</h4>
+          </div>
         </div>
 
+        <ToastContainer />
         <ErrorBoundary>
           <GridComponent
             id="gridcomp"
-            dataSource={filteredData || []} // Ensure dataSource is an array
+            dataSource={filteredData } // Ensure dataSource is an array
             allowPaging
             allowSorting
             toolbar={['Search']}
             width='auto'
-            keyExtractor={(item, index) => item.NOM} // Ensure unique keys for rows
+            keyExtractor={(item, index) => item._id} // Ensure unique keys for rows
           >
             <ColumnsDirective>
               {ordersGrid.map((item, index) => (
@@ -374,6 +349,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught an error', error, errorInfo);
+    toast.error('An unexpected error occurred.');
   }
 
   render() {

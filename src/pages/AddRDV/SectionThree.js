@@ -10,7 +10,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <TextField
             label="Ref Produit"
             name="REF_PRODUIT"
-            value={formState.REF_PRODUIT || null}
+            value={formState.REF_PRODUIT || ""}
             onChange={handleChange}
             fullWidth
           />
@@ -19,7 +19,7 @@ const SectionTwo = ({ formState, handleChange }) => {
           <TextField
             label="Surface Habitable"
             name="SURFACE_HABITABLE"
-            value={formState.SURFACE_HABITABLE ||null}
+            value={formState.SURFACE_HABITABLE ||""}
             onChange={handleChange}
             fullWidth
           />
