@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 
 import avatar from '../data/avatar.jpg';
+import logo from '../data/IcallLogo.png';
 import UserProfile from './UserProfile';
 
 const Navbar = () => {
@@ -22,8 +23,7 @@ const Navbar = () => {
     <div className="flex justify-between p-2  relative bg-gray-800 text-white">
       {/* Logo and Title */}
       <div>
-        <h1 className="text-lg font-bold">IcallManager<sub>{user.ROLE}</sub></h1>
-        
+      <img src={logo} className="w-10 h-0" alt="logo" /> 
       </div>
 
       <div className="flex items-center space-x-4">

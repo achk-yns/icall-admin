@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 
-import AuthLogin from './AuthLogin';
 import { Box } from '@mui/material';
 import AuthCard from './AuthCard';
 import AuthRegister from './AuthRegister';

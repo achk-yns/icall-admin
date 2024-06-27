@@ -44,7 +44,7 @@ export const RendezVousProvider = ({ children }) => {
       };
       fetchRendezVous();
     }
-  }, []);
+  }, [token]);
 
   // Function to add a new Rendez Vous
   const addRendezVous = async (formData) => {
@@ -70,7 +70,7 @@ export const RendezVousProvider = ({ children }) => {
 
   const updateRendezVous = async (nom,updateData)=>{
     try {
-       const updating = await FetchRend.updateRendezVous(nom,updateData)
+       await FetchRend.updateRendezVous(nom,updateData)
        const data = await FetchRend.getRendezVous();
        setRendes(data)
     } catch (error) {
@@ -81,7 +81,7 @@ export const RendezVousProvider = ({ children }) => {
   // Function to update status of a Rendez Vous
   const updateRendezVousStatus = async (nom, newStatus) => {
     try {
-      const data = await FetchRend.updateRendezVousStatus(nom, { STATUT: newStatus });
+      await FetchRend.updateRendezVousStatus(nom, { STATUT: newStatus });
       setRendes(rendes.map(rendez => (rendez.NOM === nom ? { ...rendez, STATUT: newStatus } : rendez)));
     } catch (error) {
       console.error('Error updating Rendez Vous status:', error);

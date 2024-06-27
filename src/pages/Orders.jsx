@@ -11,7 +11,7 @@ import { LuCalendarClock } from "react-icons/lu";
 import { useAuth } from '../contexts/authContext';
 import { FaFilter } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye, MdOutlineEditCalendar } from "react-icons/md";
-
+import { CiExport } from "react-icons/ci";
 import * as XLSX from 'xlsx';
 
 
@@ -87,6 +87,7 @@ const Orders = () => {
 
   const filteredData = rendes.filter(order => {
     const statusMatch = statusFilter ? order.status === statusFilter : true;
+
     const dateMatch = (dateFrom && dateTo) ? (new Date(order.createdRv) >= new Date(dateFrom) && new Date(order.createdRv) <= new Date(dateTo)) : true;
     return statusMatch && dateMatch;
   });
@@ -333,12 +334,9 @@ const Orders = () => {
           <div className="flex items-center space-x-2 " style={{ marginBottom: 20 }}>
             <Input aria-label="Demo input" onChange={(e) => handleSearchTermChange(e.target.value)} placeholder="Tapez quelque chose…" />
           </div>
-          <div className="flex space-x-2">
-      
-            <Button variant="contained" color="primary" onClick={exportToXLSX}>
-              Export XLSX
-            </Button>
-          </div>
+          
+          <CiExport  className={"h-8 w-8 ms-2 "}  onClick={exportToXLSX} />
+  
         </div>
 
         <ErrorBoundary>
