@@ -11,7 +11,7 @@ import ToastService from '../ToastService';
 const AddRendez = () => {
   const navigate = useNavigate();
   const {addRendezVous} = useRendezVous()
-
+  
   const [formData, setFormData] = useState({
     status: 'injecte',
     COMMENTAIRES: '',
@@ -62,7 +62,7 @@ const AddRendez = () => {
     
     <Container className="p-4">
       <Typography variant="h4" className="mb-4">Ajouter Un Rendez-vous</Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='mt-5'>
         <SectionOne formState={formData} handleChange={handleChange} />
         <SectionTwo formState={formData} handleChange={handleChange} />
         <SectionThree formState={formData} handleChange={handleChange} />

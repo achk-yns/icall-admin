@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { BiArrowBack } from "react-icons/bi";
 import FetchRend from "../Fetching/FetchRend";
+import { FaUser, FaPhoneAlt, FaHome, FaEnvelope, FaTag, FaDollarSign, FaCalendarAlt, FaRegCommentDots } from "react-icons/fa";
 
 const DetailRensez = () => {
   const { id } = useParams();
@@ -29,88 +30,120 @@ const DetailRensez = () => {
   }, [id]);
 
   return (
-    <Container className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <Typography variant="h4">Details Rendez-vous</Typography>
+    <Container className="p-6 font-sans">
+      <div className="flex justify-between items-center mb-6">
+        <Typography variant="h4" className="font-bold text-gray-800">
+          Details Rendez-vous
+        </Typography>
         <Link
           to={"/Rendez-vous"}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center"
+          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition duration-300 ease-in-out"
         >
           <BiArrowBack className="mr-2" /> Back
         </Link>
       </div>
 
-      <Card className="mb-4">
+      <Card className="mb-6 shadow-lg transform transition duration-300 hover:scale-105">
         <CardContent>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom className="font-semibold text-gray-700">
             Personal Information
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Nom:</strong> {data.NOM || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaUser style={{ fontSize: 20 }} className="text-blue-500" />
+                  <h5 className="mx-3">Nom et Prenom :</h5>
+                </div>
+                <i>{data.NOM || "-"} {data.PRENOM || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Prenom:</strong> {data.PRENOM || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaPhoneAlt style={{ fontSize: 20 }} className="text-green-500" />
+                  <h5 className="mx-3">Mobile :</h5>
+                </div>
+                <i>{data.MOBILE || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Mobile:</strong> {data.MOBILE || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaHome style={{ fontSize: 20 }} className="text-yellow-500" />
+                  <h5 className="mx-3">Adresse Complete :</h5>
+                </div>
+                <i>{data.ADRESSE_COMPLETE || "-"}</i>
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Adresse Complete:</strong>{" "}
-                {data.ADRESSE_COMPLETE || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">
-                <strong>Email:</strong> {data.MAIL || "-"}
+            <Grid item xs={12} sm={6} className="flex items-center">
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaEnvelope style={{ fontSize: 20 }} className="text-purple-500" />
+                  <h5 className="mx-3">Email :</h5>
+                </div>
+                <i>{data.MAIL || "-"}</i>
               </Typography>
             </Grid>
           </Grid>
         </CardContent>
-      </Card>
-
-      <Card className="mb-4">
         <CardContent>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom className="font-semibold text-gray-700">
             Additional Details
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Status:</strong> {data.status || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaTag style={{ fontSize: 20 }} className="text-pink-500" />
+                  <h5 className="mx-3">Status :</h5>
+                </div>
+                <i>{data.STATUT || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Comments:</strong> {data.COMMENTAIRES || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaTag style={{ fontSize: 20 }} className="text-pink-500" />
+                  <h5 className="mx-3">Ref Produit :</h5>
+                </div>
+                <i>{data.REF_PRODUIT || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Ref Produit:</strong> {data.REF_PRODUIT || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaDollarSign style={{ fontSize: 20 }} className="text-yellow-500" />
+                  <h5 className="mx-3">Prime :</h5>
+                </div>
+                <i>{data.PRIME || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Prime:</strong> {data.PRIME || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaCalendarAlt style={{ fontSize: 20 }} className="text-blue-500" />
+                  <h5 className="mx-3">Date de Prise :</h5>
+                </div>
+                <i>{data.DATE_PRIS_RDV || "-"}</i>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Prime:</strong> {data.DATE_PRIS_RDV || "-"}
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaCalendarAlt style={{ fontSize: 20 }} className="text-blue-500" />
+                  <h5 className="mx-3">Date Visite :</h5>
+                </div>
+                <i>{data.DATE_VISITE ? new Date(data.DATE_VISITE).toLocaleDateString() : "-"}</i>
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">
-                <strong>Date Visite:</strong>{" "}
-                {data.DATE_VISITE ? new Date(data.DATE_VISITE).toLocaleDateString() : "-"}
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" className="flex items-center text-gray-600">
+                <div className="flex items-center mx-3">
+                  <FaRegCommentDots style={{ fontSize: 20 }} className="text-green-500" />
+                  <h5 className="mx-3">Comments :</h5>
+                </div>
+                <i>{data.COMMENTAIRES || "-"}</i>
               </Typography>
             </Grid>
           </Grid>
@@ -120,9 +153,10 @@ const DetailRensez = () => {
       <div className="flex justify-end">
         <Button
           component={Link}
-          to={`/Rendez-vous/${id}edit/`}
+          to={`/Rendez-vous/${id}/edit`}
           variant="contained"
           color="primary"
+          className="bg-blue-500 hover:bg-blue-600 transition duration-300 ease-in-out"
         >
           Edit
         </Button>

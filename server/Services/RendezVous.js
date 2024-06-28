@@ -33,6 +33,7 @@ route.post('/', authMiddleware, async (req, res) => {
                 DATE_PRIS_RDV: moment(rdv.DATE_PRIS_RDV).format('DD-MM-YYYY'),
                 DATE_VISITE: moment(rdv.DATE_VISITE).format('DD-MM-YYYY')
             }));
+            
             res.status(200).send({ message: "Rendez-vous créé <3", data: formattedData });
             
         } else {

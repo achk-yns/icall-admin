@@ -10,6 +10,9 @@ module.exports = {
         fontSize: {
           14: '14px',
         },
+        fontFamily: {
+          sans: ['Roboto', 'sans-serif'],
+        },
         backgroundColor: {
           'main-bg': '#FAFBFB',
           'main-dark-bg': '#20232A',

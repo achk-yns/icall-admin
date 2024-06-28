@@ -10,10 +10,10 @@ import {
 const SectionOne = ({ formState, handleChange }) => {
   return (
     <Box className="mb-4">
-      <Typography variant="h6" className="mb-2">
+      <Typography variant="h6" className="mb-5" style={{marginBottom:20}}>
         Personal Information
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="mt-5">
         <Grid item xs={12} sm={6}>
           <TextField
             label="Nom"

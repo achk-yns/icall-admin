@@ -18,8 +18,8 @@ const App = () => {
   return (
     <AuthProvider>
       <RendezVousProvider>
-        <AppContent />
         <ToastContainer />
+        <AppContent />
       </RendezVousProvider>
     </AuthProvider>
   );

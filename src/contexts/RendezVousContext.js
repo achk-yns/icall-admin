@@ -132,6 +132,7 @@ export const RendezVousProvider = ({ children }) => {
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+        ToastService.error(`Failed to add Rendez Vous ${response.status}`);
       }
       const allData = await response.json();
       setRendes(allData.data); // Update local state with new Rendez Vous
@@ -145,6 +146,7 @@ export const RendezVousProvider = ({ children }) => {
   // Function to update a Rendez Vous
   const updateRendezVous = async (id, updateData) => {
     try {
+
       const response = await fetch(`${process.env.REACT_APP_API_URL}rendez-vous/${id}/edit`, {
         method: "PUT",
         headers: {
@@ -156,7 +158,6 @@ export const RendezVousProvider = ({ children }) => {
   
       if (!response.ok) {
         ToastService.error(data.message);
-        return false;
       }
       const data = await response.json();
       console.log("testttt",data)
@@ -172,7 +173,7 @@ export const RendezVousProvider = ({ children }) => {
   // Function to update status of a Rendez Vous
   const updateRendezVousStatus = async (id, newStatus) => {
     try {
-      const data = await FetchRend.updateRendezVousStatus(id, { STATUT: newStatus });
+      const data =FetchRend.updateRendezVousStatus(id, { STATUT: newStatus });
       setRendes(data);
       ToastService.success('Rendez Vous status updated successfully');
     } catch (error) {

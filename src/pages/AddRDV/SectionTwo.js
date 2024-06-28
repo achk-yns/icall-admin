@@ -15,9 +15,9 @@ const SectionThree = ({ formState, handleChange }) => {
   };
 
   return (
-    <Box className="mb-4 mt-4">
-      <Typography variant="h6" className="mb-2">Additional Information</Typography>
-      <Grid container spacing={2}>
+    <Box className="mb-4 " style={{marginBottom:20 ,marginTop:30}}>
+      <Typography variant="h6" className="mb-2" style={{marginBottom:10 ,marginTop:20}}>Additional Information</Typography>
+      <Grid container spacing={2} className='className="mt-5'>
         <Grid item xs={12} sm={6}>
         <InputLabel id="role-select-label">Installateur : </InputLabel>
             <Select
@@ -39,6 +39,7 @@ const SectionThree = ({ formState, handleChange }) => {
           <TextField
             label="Source"
             name="SOURCE"
+            style={{marginTop:20}}
             value={formState.SOURCE||""}
             onChange={handleChange}
             fullWidth

@@ -4,7 +4,7 @@ import { TextField, Typography, Grid, Box, FormControlLabel, Checkbox } from '@m
 const SectionTwo = ({ formState, handleChange }) => {
   return (
     <Box className="mb-4">
-      <Typography variant="h6" className="mb-2">House Details</Typography>
+      <Typography variant="h6" className="mb-2" style={{marginBottom:20 ,marginTop:20}}>House Details</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
