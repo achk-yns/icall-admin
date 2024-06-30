@@ -21,7 +21,8 @@
     "localStorage": "^1.0.4",
     "moment": "^2.30.1",
     "mongodb": "^6.7.0",
-    "mongoose": "^8.0.2"
+    "mongoose": "^8.0.2",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.3"

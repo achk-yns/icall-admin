@@ -242,11 +242,15 @@ const Orders = () => {
 
   const exportToXLSX = () => {
     try {
-      const ws = XLSX.utils.json_to_sheet(filteredData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'RendezVous');
-      XLSX.writeFile(wb, 'rendezvous.xlsx');
-      toast.success('Exported to XLSX successfully');
+      if(filteredData.length > 0 ){
+        const ws = XLSX.utils.json_to_sheet(filteredData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'RendezVous');
+        XLSX.writeFile(wb, 'rendezvous.xlsx');
+        toast.success('Exported to XLSX successfully');
+      }else{
+        toast.error('Aucun Rendez-vous , Failed to export to XLSX');
+      }
     } catch (error) {
       toast.error('Failed to export to XLSX');
     }

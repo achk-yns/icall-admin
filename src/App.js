@@ -11,9 +11,6 @@ import { RendezVousProvider } from './contexts/RendezVousContext';
 import { ToastContainer } from 'react-toastify';
 
 const App = () => {
-  useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL); // Ensure API URL is logged correctly
-  }, []);
 
   return (
     <AuthProvider>

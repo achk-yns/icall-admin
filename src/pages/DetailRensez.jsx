@@ -43,7 +43,7 @@ const DetailRensez = () => {
         </Link>
       </div>
 
-      <Card className="mb-6 shadow-lg transform transition duration-300 hover:scale-105">
+      <Card className="mb-6 shadow-lg  ">
         <CardContent>
           <Typography variant="h5" gutterBottom className="font-semibold text-gray-700">
             Personal Information

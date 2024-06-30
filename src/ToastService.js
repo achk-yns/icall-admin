@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 const ToastService = {
   success: (message) => {
     toast.success(message, {
-      position: toast.POSITION.BOTTOM_RIGHT, // Position of the toast container
+      position: "bottom-right", // Position of the toast container
       autoClose: 2000, // Time until the toast auto closes in milliseconds (0 will keep it open indefinitely)
       hideProgressBar: false, // Whether to hide the progress bar
       closeOnClick: true, // Close the toast when clicked
@@ -14,7 +14,7 @@ const ToastService = {
   },
   error: (message) => {
     toast.error(message, {
-      position:toast.POSITION.BOTTOM_RIGHT,
+      position: "bottom-right",
     });
   },
 };

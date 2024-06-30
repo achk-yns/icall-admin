@@ -93,13 +93,9 @@ const AuthLogin = ({ isDemo = false }) => {
   };
   
   // Test toast on component mount
-  const testToast = () => {
-    toast.success('Test toast is working!');
-  };
+  
 
-  useEffect(() => {
-    testToast();
-  }, []);
+
 
   return (
     <>

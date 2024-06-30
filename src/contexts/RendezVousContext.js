@@ -60,6 +60,7 @@ export const RendezVousProvider = ({ children }) => {
       iconColor: 'rgb(255, 244, 229)',
       iconBg: 'rgb(254, 201, 15)',
       pcColor: 'green-600',
+      target:10,
     },
     {
       icon: <LuCalendarClock />,
@@ -69,6 +70,7 @@ export const RendezVousProvider = ({ children }) => {
       iconColor: 'rgb(255, 244, 229)',
       iconBg: 'rgb(254, 201, 15)',
       pcColor: 'green-600',
+      target:100,
     },
     {
       icon: <LuCalendarClock />,
@@ -78,6 +80,7 @@ export const RendezVousProvider = ({ children }) => {
       iconColor: 'rgb(255, 244, 229)',
       iconBg: 'rgb(0, 128, 0)',
       pcColor: 'green-600',
+      target:120,
     },
     {
       icon: <LuCalendarClock />,
@@ -87,6 +90,7 @@ export const RendezVousProvider = ({ children }) => {
       iconColor: 'rgb(255, 244, 229)',
       iconBg: 'rgb(0, 128, 0)',
       pcColor: 'green-600',
+      target:10,
     },
   ];
 
@@ -125,15 +129,15 @@ export const RendezVousProvider = ({ children }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}rendez-vous/`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          token: `${token}`,
+          token: `${token}`, // Assuming `token` is defined in your scope
         },
-        body: JSON.stringify(formData),
+        body: formData, // formData is already an instance of FormData
       });
+  
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
-        ToastService.error(`Failed to add Rendez Vous ${response.status}`);
       }
+  
       const allData = await response.json();
       setRendes(allData.data); // Update local state with new Rendez Vous
       ToastService.success('Rendez Vous added successfully');
@@ -142,7 +146,7 @@ export const RendezVousProvider = ({ children }) => {
       ToastService.error('Failed to add Rendez Vous');
     }
   };
-
+  
   // Function to update a Rendez Vous
   const updateRendezVous = async (id, updateData) => {
     try {

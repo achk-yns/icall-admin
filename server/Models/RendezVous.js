@@ -1,4 +1,10 @@
 const mongoose = require('mongoose');
+const documentSchema = new mongoose.Schema({
+    filename: String,
+    contentType: String,
+    size: Number,
+    // Add other fields as needed
+});
 
 const rendezVousSchema = new mongoose.Schema({
     user_id: {
@@ -83,7 +89,8 @@ const rendezVousSchema = new mongoose.Schema({
     RETOUR_INSTALLATEUR: {
         type: String,
         required: false
-    }
+    },
+    documents: [documentSchema]
 });
 
 
