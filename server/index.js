@@ -3,11 +3,14 @@ const app = express();
 require("./DbConnect");
 const RendezVous = require("./Services/RendezVous");
 const UsersRoute = require("./Services/Users");
+
 require("dotenv").config();
 const PORT =process.env.PORT || 3000;
 const session = require("express-session");
 const cors = require("cors");
 
+
+app.use('/uploads', express.static('uploads')); 
 app.use(express.static("./public"));
 app.use(cors());
 app.use(express.json()); // <-- Updated JSON parsing middleware
@@ -20,6 +23,7 @@ app.use(
     saveUninitialized: false,
   })
 );
+
 
 app.use("/users", UsersRoute);
 app.use("/rendez-vous",  RendezVous);

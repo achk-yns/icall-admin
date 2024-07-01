@@ -13,7 +13,18 @@ const rendezVousSchema = new mongoose.Schema({
     },
     createdRv: { 
         type: Date, 
-        default: Date.now 
+        default: Date.now() 
+    },
+    CIVILITE:{
+        type: String,
+        enum: ['mr', 'mrs'],
+        default: 'mr'
+    }
+    ,
+    Type_Chauffage:{
+        type: String,
+        enum: ['hydraulique', 'electrique', 'mixte'],
+        default: 'hydraulique'
     },
     STATUT: {
         type: String,
@@ -48,7 +59,6 @@ const rendezVousSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: [/^\d{9}$/, 'Le numéro de mobile doit contenir exactement 9 chiffres']
     },
     REF_PRODUIT: {
         type: String,
@@ -76,7 +86,7 @@ const rendezVousSchema = new mongoose.Schema({
     },
     INSTALLATEUR: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
     SOURCE: {
         type: String,
@@ -90,15 +100,10 @@ const rendezVousSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    documents: [documentSchema]
+    images: [documentSchema]
 });
 
 
-rendezVousSchema.pre('save', function (next) {
-    if (this.MOBILE && /^\d{9}$/.test(this.MOBILE)) {
-        this.MOBILE = `+33${this.MOBILE}`;
-    }
-    next();
-});
+
 
 module.exports = mongoose.model('RendezVous', rendezVousSchema);
